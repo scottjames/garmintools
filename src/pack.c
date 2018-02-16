@@ -1132,7 +1132,9 @@ mkpath ( const char *path )
       } else {
 	if ( mkdir(rpath,mode) != -1 ) {   /* have to make this part */
 	  if ( already ) {
-	    chown(rpath,owner,group);
+	    if (chown(rpath,owner,group) < 0) {
+            fprintf(stderr, "failed to chown %s : %m\n", path);
+        }
 	  }
 	} else {
 	  fprintf(stderr,"mkpath: mkdir(%s,%o): %s",path,mode,strerror(errno));
@@ -1147,7 +1149,9 @@ mkpath ( const char *path )
 
   if ( mkdir(path,mode) != -1 ) {
     if ( already ) {
-      chown(rpath,owner,group);
+      if (chown(rpath,owner,group) < 0) {
+          fprintf(stderr, "failed to chown %s : %m\n", path);
+      }
     }
   } else {
     fprintf(stderr,"mkpath: mkdir(%s,%o): %s",path,mode,strerror(errno));
@@ -1193,7 +1197,9 @@ garmin_save ( garmin_data * data, const char * filename, const char * dir )
 
     if ( (fd = creat(path,0664)) != -1 ) {
 
-      fchown(fd,owner,group);
+      if (fchown(fd,owner,group) < 0) {
+          fprintf(stderr, "Failed to chown file: %m\n");
+      }
 
       /* Allocate the memory and write the file header */
 
@@ -1203,7 +1209,7 @@ garmin_save ( garmin_data * data, const char * filename, const char * dir )
 
 	pos = buf;
 	memset(pos,0,GARMIN_HEADER);
-	strncpy(pos,GARMIN_MAGIC,11);
+	strncpy((char *)pos,GARMIN_MAGIC,11);
 	put_uint32(pos+12,GARMIN_VERSION);
 	marker = pos+16;
 	pos += GARMIN_HEADER;

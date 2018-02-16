@@ -2132,7 +2132,7 @@ uint32        garmin_data_size      ( garmin_data * d );
 /* symbol_name.c                                                             */
 /* ------------------------------------------------------------------------- */
 
-char * garmin_symbol_name ( symbol_value s );
+const char * garmin_symbol_name ( symbol_value s );
 
 
 /* ------------------------------------------------------------------------- */

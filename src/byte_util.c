@@ -85,7 +85,7 @@ DEF_ENDIAN_PUT(float64)
 char *
 get_string ( garmin_packet * p, int * offset )
 {
-  char * start  = p->packet.data + *offset;
+  char * start  = (char *)(p->packet.data) + *offset;
   char * cursor = start;
   int    allow  = garmin_packet_size(p) - *offset;
   char * ret    = NULL;
@@ -116,7 +116,7 @@ get_string ( garmin_packet * p, int * offset )
 char *
 get_vstring ( uint8 ** buf )
 {
-  char * start  = *buf;
+  char * start  = (char *)*buf;
   char * cursor = start;
   char * ret    = NULL;
   int    bytes  = 0;
@@ -136,7 +136,7 @@ void
 put_vstring ( uint8 ** buf, const char * x )
 {
   if ( x != NULL ) {
-    strcpy(*buf,x);
+    strcpy((char *)*buf,x);
     *buf += strlen(x)+1;
   }
 }
@@ -150,7 +150,7 @@ put_vstring ( uint8 ** buf, const char * x )
 char **
 get_strings ( garmin_packet * p, int * offset )
 {
-  char *  start  = p->packet.data + *offset;
+  char *  start  = (char *)p->packet.data + *offset;
   char *  cursor = start;
   int     allow  = garmin_packet_size(p) - *offset;
   char ** ret    = NULL;

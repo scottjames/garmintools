@@ -42,7 +42,7 @@ typedef struct
   uint8 cad;
 } route_point;
 
-int
+static int
 get_gpx_data ( garmin_data *    fulldata,
                route_point   *** tracks,
                position_type *  sw,
@@ -61,7 +61,11 @@ get_gpx_data ( garmin_data *    fulldata,
   int                 ok     = 0;
   garmin_data *		data;
   garmin_list *     glaps;
-  garmin_data*     points;
+  route_point*     points;
+  int               laps;
+  int curlapnum = 0;
+  D1015 *lapdata = NULL;
+  int pause = 0;
 
   if ( fulldata != NULL ) {
 
@@ -70,15 +74,15 @@ get_gpx_data ( garmin_data *    fulldata,
     glaps=garmin_list_data(fulldata,1)->data; // get lap information
 
     // fixme: crash if we didn't get it
-    int laps=glaps->elements+1;
+    laps=glaps->elements+1;
 
     *tracks = malloc(sizeof(route_point) * (laps));
     memset(*tracks,0,laps*sizeof(route_point));
 
-    int curlapnum=0;
+    curlapnum=0;
 
     lapnode=glaps->head;
-    D1015* lapdata=lapnode->data->data;
+    lapdata=lapnode->data->data;
 
     data = garmin_list_data(fulldata, 2); // get track points
 
@@ -94,7 +98,7 @@ get_gpx_data ( garmin_data *    fulldata,
       (*tracks)[curlapnum]=points;
       rp = points;
 
-      int pause=0;
+      pause=0;
 
       for ( node = dlist->head; node != NULL; node = node->next ) {
 	point = node->data;
@@ -308,20 +312,20 @@ print_route_points ( route_point * points,
   }
 }
 
-void
+static void
 print_gpx_data ( garmin_data * data, FILE * fp, int spaces )
 {
   route_point **         laps = NULL;
   route_point * points;
   position_type  sw;
   position_type  ne;
+  int i;
 
   if ( get_gpx_data(data,&laps,&sw,&ne) != 0 ) {
     print_gpx_header(fp,spaces);
     print_time_tag(time(NULL),fp,spaces);
     print_bounds_tag(&sw,&ne,fp,spaces);
 
-    int i;
     print_open_tag("trk",fp,spaces);
     for (i=0; laps[i]!=NULL; i++) {
       points=laps[i];

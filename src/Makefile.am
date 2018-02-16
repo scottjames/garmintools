@@ -13,7 +13,6 @@ libgarmintools_la_SOURCES = \
 	command.c \
 	packet_id.c \
 	print.c \
-	scan.c \
 	datatype.c \
 	symbol_name.c \
 	run.c
@@ -38,7 +37,7 @@ bin_PROGRAMS = \
 	garmin_gchart \
 	garmin_gpx
 
-AM_CFLAGS = $(USB_CFLAGS) -Wall
+AM_CFLAGS = $(USB_CFLAGS)
 
 garmin_save_runs_SOURCES = garmin_save_runs.c
 

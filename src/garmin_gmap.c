@@ -47,7 +47,7 @@ static unsigned long M[32] = {
 
 
 
-int
+static int
 get_gmap_data ( garmin_data *    data,
 		char **          points,
 		char **          levels,
@@ -223,7 +223,7 @@ print_position ( const char *           tag,
 }
 
 
-void
+static void
 print_gmap_data ( garmin_data * data, FILE * fp, int spaces )
 {
   char *         points = NULL;

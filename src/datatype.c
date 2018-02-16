@@ -143,7 +143,7 @@ garmin_list_data ( garmin_data * data, uint32 which )
   garmin_data *       ret = NULL;
   garmin_list *       list;
   garmin_list_node *  n;
-  int                 i;
+  unsigned int        i;
 
   if ( data                 != NULL       && 
        data->type           == data_Dlist && 

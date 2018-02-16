@@ -1085,12 +1085,12 @@ garmin_unpack_dlist ( garmin_list * list, uint8 ** pos )
     GETU32(id);
     GETU32(type);
     GETU32(size);
-    if ( id == list->id ) {
+    if ( (int) id == list->id ) {
       garmin_list_append(list,garmin_unpack(pos,type));
     } else {
       /* list element has wrong list ID */
-      printf("garmin_unpack_dlist: list element had ID %d, expected ID %d\n",
-	     id,list->id);
+      printf("garmin_unpack_dlist: list element had ID %d, expected ID %d, size (%u)\n",
+	     id,list->id, size);
     }
   }
 }
@@ -1140,8 +1140,8 @@ garmin_unpack_chunk ( uint8 ** pos )
 
     if ( unpacked != chunk ) {      
       /* unpacked the wrong number of bytes! */
-      printf("garmin_unpack_chunk: unpacked %d bytes (expecting %d). Exiting.\n",
-	     unpacked,chunk);
+      printf("garmin_unpack_chunk: unpacked %d bytes (expecting %d) (size %u). Exiting.\n",
+	     unpacked,chunk, size);
       exit(1);
     }
     

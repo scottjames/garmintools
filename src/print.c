@@ -32,9 +32,9 @@
 
 
 #define GARMIN_ENUM_NAME(x,y)                        \
-  static char * garmin_d##x##_##y ( D##x##_##y z )   \
+  static const char * garmin_d##x##_##y ( D##x##_##y z )   \
   {                                                  \
-    char * name = "unknown";                         \
+    const char * name = "unknown";                   \
                                                      \
     switch ( z )
 
@@ -1537,7 +1537,7 @@ GARMIN_ENUM_NAME(1002,duration_type) {
 static void
 garmin_print_d1002 ( D1002 * x, FILE * fp, int spaces )
 {
-  int i;
+  unsigned int i;
 
   print_spaces(fp,spaces);
   fprintf(fp,"<workout type=\"1002\" name=\"%s\" steps=\"%d\" "

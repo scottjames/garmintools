@@ -361,7 +361,7 @@ garmin_start_session ( garmin_unit * garmin )
 void
 garmin_print_packet ( garmin_packet * p, int dir, FILE * fp )
 {
-  int    i;
+  uint32 i;
   int    j;
   uint32 s;
   char   hex[128];

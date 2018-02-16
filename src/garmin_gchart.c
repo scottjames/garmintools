@@ -51,12 +51,12 @@ typedef struct gchart_conf {
 
 /* Functions */
 
-float gchart_t_encode(float32 num, float32 max) {
+static float gchart_t_encode(float32 num, float32 max) {
     return (floor(1000*num/max)/10);
 }
 
 
-char gchart_e_encode_single(int num) {
+static char gchart_e_encode_single(int num) {
     if (num < 0 )
         return '_';
     if (num <= 25 )
@@ -73,14 +73,16 @@ char gchart_e_encode_single(int num) {
 }
 
 
-void
+static void
 gchart_e_encode ( float32 num, float32 max, char * str )
 {
   /* printf("-- encoding %f of %f => ", num, max); */
   num = 4095*num/max;
   /* printf(" %f\n", num); */
   if (num < 0 || num > 4095 ) {
-    str = "__";
+    str[0] = '_';
+    str[1] = '_';
+    str[2]= '\0';
   }
   str[0]=gchart_e_encode_single((int)num/64);
   str[1]=gchart_e_encode_single(num - ((int)(num/64)*64) );
@@ -88,7 +90,7 @@ gchart_e_encode ( float32 num, float32 max, char * str )
 }
 
 
-void 
+static void 
 get_gchart_max_data ( garmin_data *  data, 
 		      D304 *         max, 
 		      int *          datapoints_num, 
@@ -132,7 +134,7 @@ get_gchart_max_data ( garmin_data *  data,
 }
 
 
-int
+static int
 get_gchart_data ( garmin_data *  data,
 		  gchart_conf *  conf,
 		  D304 *         max,
@@ -149,6 +151,7 @@ get_gchart_data ( garmin_data *  data,
   int           ok     = 0;
   int j = 0;
   int i = 0; 
+  int np = 0;
   
   total.time = 0;
   total.distance = 0;
@@ -161,7 +164,7 @@ get_gchart_data ( garmin_data *  data,
     if ( data->type == data_Dlist ) {
       dlist = data->data;
       
-      int np = (int)ceil(datapoints_num / (conf->width / conf->pixperdp));
+      np = (int)ceil(datapoints_num / (conf->width / conf->pixperdp));
       i=1;
 
       /* Add check to make sure we won't overflow our string length */
@@ -223,6 +226,8 @@ get_gchart_data ( garmin_data *  data,
 		sprintf(encoded_strings->alt + encoded_strings->alt_len, "%.1f,", 
 			gchart_t_encode(a, max->alt));
 	      break;
+        default:
+          break;
 	    }
 	    
 	    /* printf(" = %.1d\n", d); */
@@ -257,7 +262,7 @@ get_gchart_data ( garmin_data *  data,
 }
 
 
-void
+static void
 print_gchart_data ( garmin_data *  data,
 		    FILE *         fp,
 		    gchart_conf *  conf,
@@ -293,17 +298,19 @@ print_gchart_data ( garmin_data *  data,
   switch (conf->encode_method) {
   case TXT_ENC: fprintf(fp, "t:%s|%s\n", enc_strs.distance, enc_strs.alt); break;
   case EXT_ENC: fprintf(fp, "e:%s,%s\n", enc_strs.distance, enc_strs.alt); break;
+  default: break;
   }
   /* Time vs Distance */
   fprintf(fp, "http://chart.apis.google.com/chart?cht=lxy&chtt=Time+vs.+Distance&chs=%dx%d&chd=", conf->width, conf->height);
   switch (conf->encode_method) {
   case TXT_ENC: fprintf(fp, "t:%s|%s\n", enc_strs.time, enc_strs.distance); break;
   case EXT_ENC: fprintf(fp, "e:%s,%s\n", enc_strs.time, enc_strs.distance); break;
+  default: break;
   }
 }
 
 
-int 
+static int 
 process_arguments ( int argc, char **argv, gchart_conf *conf )
 {
   /* Get the arguments */

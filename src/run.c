@@ -131,7 +131,7 @@ get_lap_start_time ( garmin_data * lap, time_type * start_time )
 }
 
 
-garmin_data *
+static garmin_data *
 get_track ( garmin_list * points, uint32 trk_index )
 {
   garmin_list_node * n;

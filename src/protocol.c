@@ -54,6 +54,7 @@ garmin_assign_protocol ( garmin_unit *  garmin,
     garmin->protocol.route               = protocol;
     garmin->datatype.route.header        = datatypes[0];
     garmin->datatype.route.waypoint      = datatypes[1];
+    break;
 
   case appl_A201:
     garmin->protocol.route               = protocol;
@@ -167,6 +168,7 @@ garmin_assign_protocol ( garmin_unit *  garmin,
   case appl_A1008:
     garmin->protocol.course.point        = protocol;
     garmin->datatype.course.point        = datatypes[0];
+    break;
 
   case appl_A1009:
     garmin->protocol.course.limits       = protocol;

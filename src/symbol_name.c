@@ -21,10 +21,10 @@
 
 
 #define SYMBOL_NAME                     \
-  char *                                \
+  const char *                                \
   garmin_symbol_name ( symbol_value s ) \
   {                                     \
-    char * name = "unknown";            \
+    const char * name = "unknown";            \
                                         \
     switch ( s )
 
