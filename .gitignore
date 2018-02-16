@@ -29,3 +29,5 @@ config.log
 config.status
 libtool
 ltmain.sh
+m4
+build-aux

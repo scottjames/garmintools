@@ -3,7 +3,8 @@
 AC_INIT([garmintools],[0.10],[dave@daveb.net])
 AC_CONFIG_SRCDIR(src/garmin.h)
 AC_CONFIG_HEADERS(src/config.h:src/config.h.in)
-AC_CONFIG_AUX_DIR([.])
+AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
 # Checks for programs.
@@ -23,7 +24,6 @@ AC_TYPE_SIZE_T
 AC_STRUCT_TM
 
 # Checks for library functions.
-AC_FUNC_SETVBUF_REVERSED
 AC_FUNC_STRFTIME
 AC_CHECK_FUNCS([memset strerror])
 
