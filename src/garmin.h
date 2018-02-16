@@ -22,7 +22,7 @@
 
 
 #include <stdio.h>
-#include <usb.h>
+#include <libusb.h>
 #include <math.h>
 
 
@@ -1925,7 +1925,7 @@ typedef struct garmin_datatypes {
 
 
 typedef struct garmin_usb {
-  usb_dev_handle *          handle;
+  libusb_device_handle *    handle;
   int                       bulk_out;
   int                       bulk_in;
   int                       intr_in;

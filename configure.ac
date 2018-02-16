@@ -9,6 +9,7 @@ AM_INIT_AUTOMAKE
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
+PKG_PROG_PKG_CONFIG
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -27,13 +28,9 @@ AC_CHECK_FUNCS([memset strerror])
 AC_C_BIGENDIAN
 
 # Checks for libusb
-AC_PATH_PROG(LIBUSB_CONFIG,libusb-config)
-if test -n "${LIBUSB_CONFIG}"; then
-   USB_LIBS="`$LIBUSB_CONFIG --libs`"
-   USB_CFLAGS="`$LIBUSB_CONFIG --cflags`"
-else
-   AC_MSG_ERROR(cannot build garmintools without libusb)
-fi
+PKG_CHECK_MODULES([USB],[libusb-1.0],
+        [],
+        [AC_MSG_ERROR(cannot build garmintools without libusb)])
 
 # Checks for python
 AC_ARG_WITH(python,[  --with-python		  compile python bindings.],
