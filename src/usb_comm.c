@@ -74,7 +74,6 @@ garmin_open ( garmin_unit * garmin )
     cnt = libusb_get_device_list(ctx,&dl);
     
     for (i = 0; i < cnt; ++i) {
-      {
         struct libusb_device_descriptor descriptor;
         struct libusb_config_descriptor *config;
 
@@ -97,22 +96,28 @@ garmin_open ( garmin_unit * garmin )
 	  if ( err ) {
 	    printf("libusb_open failed: %s\n",libusb_error_name(err));
             garmin->usb.handle = NULL;
-	  } else if ( garmin->verbose != 0 ) {
-	    printf("[garmin] libusb_open = %p\n",garmin->usb.handle);
+	  } else {
+	      if ( garmin->verbose != 0 ) {
+                printf("[garmin] libusb_open = %p\n",garmin->usb.handle);
+	      }
 
             err = libusb_set_configuration(garmin->usb.handle,1);
             if ( err ) {
               printf("libusb_set_configuration failed: %s\n",
                      libusb_error_name(err));
-            } else if ( garmin->verbose != 0 ) {
-              printf("[garmin] libusb_set_configuration[1] succeeded\n");
+            } else {
+		if ( garmin->verbose != 0 ) {
+	              printf("[garmin] libusb_set_configuration[1] succeeded\n");
+		}
 
               err = libusb_claim_interface(garmin->usb.handle,0);
               if ( err ) {
                 printf("libusb_claim_interface failed: %s\n",
                        libusb_error_name(err));
-              } else if ( garmin->verbose != 0 ) {
-                printf("[garmin] libusb_claim_interface[0] succeeded\n");
+              } else {
+		if ( garmin->verbose != 0 ) {
+                     printf("[garmin] libusb_claim_interface[0] succeeded\n");
+		}
 
                 err = libusb_get_config_descriptor_by_value(di,1,&config);
                 if ( err ) {
@@ -142,25 +147,22 @@ garmin_open ( garmin_unit * garmin )
 	      switch ( ep->bmAttributes & LIBUSB_TRANSFER_TYPE_MASK ) {
 	      case LIBUSB_TRANSFER_TYPE_BULK:
 		if ( ep->bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK ) {
-		  garmin->usb.bulk_in = 
-		    ep->bEndpointAddress & LIBUSB_ENDPOINT_ADDRESS_MASK;
+		  garmin->usb.bulk_in = ep->bEndpointAddress;
 		  if ( garmin->verbose != 0 ) {
-		    printf("[garmin] bulk IN  = %d\n",garmin->usb.bulk_in);
+		    printf("[garmin] bulk IN  = 0x%02x\n",garmin->usb.bulk_in);
 		  }
 		} else {
-		  garmin->usb.bulk_out = 
-		    ep->bEndpointAddress & LIBUSB_ENDPOINT_ADDRESS_MASK;
+		  garmin->usb.bulk_out = ep->bEndpointAddress;
 		  if ( garmin->verbose != 0 ) {
-		    printf("[garmin] bulk OUT = %d\n",garmin->usb.bulk_out);
+		    printf("[garmin] bulk OUT = 0x%02x\n",garmin->usb.bulk_out);
 		  }
 		}
 		break;
 	      case LIBUSB_TRANSFER_TYPE_INTERRUPT:
 		if ( ep->bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK ) {
-		  garmin->usb.intr_in = 
-		    ep->bEndpointAddress & LIBUSB_ENDPOINT_ADDRESS_MASK;
+		  garmin->usb.intr_in = ep->bEndpointAddress;
 		  if ( garmin->verbose != 0 ) {
-		    printf("[garmin] intr IN  = %d\n",garmin->usb.intr_in);
+		    printf("[garmin] intr IN  = 0x%02x\n",garmin->usb.intr_in);
 		  }
 		}
 		break;
@@ -174,7 +176,6 @@ garmin_open ( garmin_unit * garmin )
 
 	  break;
 	}
-      }
 
       if ( garmin->usb.handle != NULL ) break;
     }
