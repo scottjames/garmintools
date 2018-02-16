@@ -5,11 +5,12 @@ AC_CONFIG_SRCDIR(src/garmin.h)
 AC_CONFIG_HEADERS(src/config.h:src/config.h.in)
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([1.11 -Wall no-define foreign dist-xz no-dist-gzip tar-ustar])
 
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
+AM_PROG_AR
 PKG_PROG_PKG_CONFIG
 
 LT_PREREQ([2.2])
