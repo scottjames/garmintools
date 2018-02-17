@@ -83,7 +83,7 @@ gchart_e_encode ( float32 num, float32 max, char * str )
     str[0] = '_';
     str[1] = '_';
     str[2]= '\0';
-  }
+  } else {
   str[0]=gchart_e_encode_single((int)num/64);
   str[1]=gchart_e_encode_single(num - ((int)(num/64)*64) );
   str[2]='\0';
