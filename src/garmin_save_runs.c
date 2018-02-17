@@ -36,6 +36,9 @@ main ( int argc, char ** argv )
   if ( garmin_init(&garmin,verbose) != 0 ) {
     /* Read and save the runs. */
     garmin_save_runs(&garmin);
+
+    garmin_close (&garmin);
+    garmin_shutdown (&garmin);
   } else {
     printf("garmin unit could not be opened!\n");
   }

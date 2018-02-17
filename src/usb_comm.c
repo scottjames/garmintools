@@ -75,7 +75,7 @@ garmin_open ( garmin_unit * garmin )
     
     for (i = 0; i < cnt; ++i) {
         struct libusb_device_descriptor descriptor;
-        struct libusb_config_descriptor *config;
+        struct libusb_config_descriptor *config = NULL;
 
         di = dl[i];
         err = libusb_get_device_descriptor (di, &descriptor);
@@ -171,6 +171,9 @@ garmin_open ( garmin_unit * garmin )
 	      }
 	    }
 	  }
+
+      if (config)
+          libusb_free_config_descriptor (config);
 
 	  /* We've found what should be the Garmin interface. */
 
@@ -404,4 +407,14 @@ garmin_print_packet ( garmin_packet * p, int dir, FILE * fp )
   } else {
     fprintf(fp,"/>\n");
   }
+}
+
+static void garmin_usb_shutdown(void) __attribute__((destructor));
+
+static void
+garmin_usb_shutdown(void) {
+    if (ctx != NULL) {
+        libusb_exit (ctx);
+        ctx = NULL;
+    }
 }

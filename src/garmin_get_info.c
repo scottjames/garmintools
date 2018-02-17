@@ -36,6 +36,8 @@ main ( int argc, char ** argv )
   if ( garmin_init(&garmin,verbose) != 0 ) {
     /* Now print the info. */
     garmin_print_info(&garmin,stdout,0);
+    garmin_close (&garmin);
+    garmin_shutdown (&garmin);
   } else {
     printf("garmin unit could not be opened!\n");
   }

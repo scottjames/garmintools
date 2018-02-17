@@ -567,7 +567,7 @@ garmin_read_a000_a001 ( garmin_unit * garmin )
       e = &garmin->extended;
       /* These strings should be ignored, but we save them anyway. */
       pos = 0;
-      e->ext_data = merge_strings(e->ext_data,get_strings(&p,&pos));
+      e->ext_data = merge_strings(e->ext_data, get_strings(&p, &pos));
       break;
 
     case L000_Pid_Protocol_Array:
@@ -1195,3 +1195,18 @@ garmin_init ( garmin_unit * garmin, int verbose )
   }
 }
 
+int
+garmin_shutdown (garmin_unit *garmin)
+{
+    char **it = NULL;
+    free (garmin->product.product_description);
+    for (it = garmin->product.additional_data; it && *it; it++) {
+        free(*it);
+    }
+    free (garmin->product.additional_data);
+
+    for (it = garmin->extended.ext_data; it && *it; it++) {
+        free(*it);
+    }
+    free (garmin->extended.ext_data);
+}
