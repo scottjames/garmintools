@@ -1203,7 +1203,7 @@ garmin_save ( garmin_data * data, const char * filename, const char * dir )
 
       /* Allocate the memory and write the file header */
 
-      if ( (buf = malloc(bytes + GARMIN_HEADER)) != NULL ) {
+      if ( (buf = calloc(bytes + GARMIN_HEADER, sizeof(uint8))) != NULL ) {
 
 	/* write GARMIN_MAGIC, GARMIN_VERSION, and bytes. */
 

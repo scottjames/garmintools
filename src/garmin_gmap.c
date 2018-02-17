@@ -90,8 +90,8 @@ get_gmap_data ( garmin_data *    data,
 
       dlist = data->data;
       
-      *points = malloc(12 * dlist->elements);
-      *levels = malloc(2 * dlist->elements);
+      *points = calloc(12 * dlist->elements, sizeof(char));
+      *levels = calloc(2 * dlist->elements, sizeof(char));
 
       pp = *points;
       lp = *levels;

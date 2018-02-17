@@ -123,7 +123,7 @@ get_vstring ( uint8 ** buf )
 
   do { bytes++; } while ( *cursor++ );
 
-  ret = malloc(bytes);
+  ret = calloc(bytes, sizeof(char));
   strncpy(ret,start,bytes-1);
 
   *buf += bytes;
@@ -176,7 +176,7 @@ get_strings ( garmin_packet * p, int * offset )
     /* append it to the list of strings */
 
     if ( ret != NULL ) ret = realloc(ret,(nstr+2) * sizeof(char *));
-    else               ret = malloc(2 * sizeof(char *));
+    else               ret = calloc(2, sizeof(char *));
 
     ret[nstr++] = elem;
     ret[nstr]   = NULL;

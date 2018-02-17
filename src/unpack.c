@@ -1174,7 +1174,7 @@ garmin_load ( const char * filename )
 
   if ( (fd = open(filename,O_RDONLY)) != -1 ) {
     if ( fstat(fd,&sb) != -1 ) {
-      if ( (buf = malloc(sb.st_size)) != NULL ) {
+      if ( (buf = calloc(sb.st_size, sizeof(char))) != NULL ) {
 	if ( (bytes = read(fd,buf,sb.st_size)) == sb.st_size ) {
 	  data_l = garmin_alloc_data(data_Dlist);
 	  list   = data_l->data;

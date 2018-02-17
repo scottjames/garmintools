@@ -29,7 +29,7 @@ static uint32 gListId = 0;
 garmin_data *
 garmin_alloc_data ( garmin_datatype type )
 {
-  garmin_data * d = malloc(sizeof(garmin_data));
+  garmin_data * d = calloc(1, sizeof(garmin_data));
 
   d->type = type;
 
@@ -121,7 +121,7 @@ garmin_list_append ( garmin_list * list, garmin_data * data )
 
   if ( data != NULL ) {
     if ( l == NULL ) l = garmin_alloc_list();
-    n = malloc(sizeof(garmin_list_node));
+    n = calloc(1, sizeof(garmin_list_node));
 
     n->data = data;
     n->next = NULL;

@@ -76,8 +76,7 @@ get_gpx_data ( garmin_data *    fulldata,
     // fixme: crash if we didn't get it
     laps=glaps->elements+1;
 
-    *tracks = malloc(sizeof(route_point) * (laps));
-    memset(*tracks,0,laps*sizeof(route_point));
+    *tracks = calloc(laps, sizeof(route_point));
 
     curlapnum=0;
 
@@ -94,7 +93,7 @@ get_gpx_data ( garmin_data *    fulldata,
 
       dlist = data->data;
 
-      points = malloc(sizeof(route_point) * (dlist->elements+1+(laps*2)));
+      points = calloc(dlist->elements+1+(laps*2), sizeof(route_point));
       (*tracks)[curlapnum]=points;
       rp = points;
 
