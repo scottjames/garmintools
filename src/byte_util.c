@@ -99,7 +99,7 @@ get_string ( garmin_packet * p, int * offset )
 
   do { bytes++; } while ( --allow && *cursor++ );
   
-  ret = malloc(bytes);
+  ret = calloc(bytes, sizeof (char));
   strncpy(ret,start,bytes-1);
   
   *offset += bytes;
@@ -170,7 +170,7 @@ get_strings ( garmin_packet * p, int * offset )
 
     do { bytes++; } while ( --allow && *cursor++ );
 
-    elem = malloc(bytes);
+    elem = calloc(bytes, sizeof (char));
     strncpy(elem,start,bytes-1);
 
     /* append it to the list of strings */

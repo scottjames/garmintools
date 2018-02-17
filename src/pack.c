@@ -1084,7 +1084,7 @@ static int
 mkpath ( const char *path )
 {
   struct stat sb;
-  char        rpath[BUFSIZ];
+  char        rpath[BUFSIZ] = { 0 };
   int         n = 0;
   int         j = 0;
   int         ok = 1;

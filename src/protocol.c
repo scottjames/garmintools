@@ -541,6 +541,7 @@ garmin_read_a000_a001 ( garmin_unit * garmin )
 
   /* Send the product request */
   
+  memset (&p, 0, sizeof (p));
   garmin_packetize(&p,L000_Pid_Product_Rqst,0,NULL);
   garmin_write(garmin,&p);
 
