@@ -1,6 +1,4 @@
-===========================================================================
-                                GARMINTOOLS
-===========================================================================
+# GARMINTOOLS
 
 This software provides Linux users with the ability to communicate
 with the Garmin Forerunner 205 and Forerunner 305 via the USB
@@ -11,9 +9,9 @@ implement all of the documented Garmin protocols
 Garmin with a USB connection to a PC, you ought to be able to use this
 software to communicate with it.
 
-==> You will need to make sure that the 'garmin_gps' kernel module is
-    not loaded or compiled into your kernel.  This module conflicts
-    with the garmintools software.
+You will need to make sure that the 'garmin_gps' kernel module is
+not loaded or compiled into your kernel.  This module conflicts
+with the garmintools software.
 
 If you're looking for a complete solution to all of your Linux Garmin
 GPS needs, this is not it.  I own a Garmin Forerunner 305 and wrote
