@@ -144,7 +144,7 @@ garmin_make_command_packet ( garmin_unit *    garmin,
   int    r = 1;
   uint16 c = 0;
   uint16 p = 0;
-  uint8  b[2];
+  uint8  b[2] = { 0 };
 
   /* Determine the packet ID based on the link protocol. */
 

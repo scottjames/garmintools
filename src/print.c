@@ -149,7 +149,7 @@ garmin_print_dtime ( uint32 t, FILE * fp, const char * label )
 {
   time_t     tval;
   struct tm  tmval;
-  char       buf[128];
+  char       buf[128] = { 0 };
   int        len;
 
   /* 

@@ -199,14 +199,14 @@ garmin_save_runs ( garmin_unit * garmin )
   uint32              l_idx;
   time_type           start;
   time_t              start_time;
-  char                filename[BUFSIZ];
+  char                filename[BUFSIZ] = { 0 };
   char *              filedir = NULL;
 #ifdef __GNU__
   char *              path = NULL;
 #else
-  char                path[PATH_MAX];
+  char                path[PATH_MAX] = { 0 };
 #endif /* __GNU__ */
-  char                filepath[BUFSIZ];
+  char                filepath[BUFSIZ] = { 0 };
   struct tm *         tbuf;
 
   if ( (filedir = getenv("GARMIN_SAVE_RUNS")) != NULL ) {

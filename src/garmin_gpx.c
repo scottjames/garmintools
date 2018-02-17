@@ -248,7 +248,7 @@ print_time_tag ( const time_t           t,
                  FILE *                 fp,
                  int                    spaces )
 {
-  char buf[512];
+  char buf[512] = { 0 };
   struct tm *tmp;
 
   tmp = gmtime(&t);

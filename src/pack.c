@@ -1179,7 +1179,7 @@ garmin_save ( garmin_data * data, const char * filename, const char * dir )
   struct stat sb;
   uid_t       owner = -1;
   gid_t       group = -1;
-  char        path[BUFSIZ];
+  char        path[BUFSIZ] = { 0 };
 
   if ( (bytes = garmin_data_size(data)) != 0 ) {
 

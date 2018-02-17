@@ -189,7 +189,7 @@ get_gchart_data ( garmin_data *  data,
 	    continue;
 
 	  if ( ++j % np == 0 ) { 
-	    char str[3];
+	    char str[3] = { 0 };
 	    int d=(total.distance == 0) ? 0 : (int)total.distance/np;
 	    int a=(total.alt == 0) ? 0 : (int)total.alt/np;
 	    int t=(total.time == 0) ? 0 : (int)(total.time/np);

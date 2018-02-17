@@ -364,8 +364,8 @@ garmin_print_packet ( garmin_packet * p, int dir, FILE * fp )
   uint32 i;
   int    j;
   uint32 s;
-  char   hex[128];
-  char   dec[128];
+  char   hex[128] = { 0 };
+  char   dec[128] = { 0 };
 
   s = garmin_packet_size(p);
 
