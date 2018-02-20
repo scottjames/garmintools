@@ -25,6 +25,8 @@
 #include <libusb.h>
 #include "garmin.h"
 
+#include <stdbool.h>
+
 
 #define INTR_TIMEOUT  3000
 #define BULK_TIMEOUT  3000
@@ -45,6 +47,33 @@ garmin_close ( garmin_unit * garmin )
   return 0;
 }
 
+#if defined(__linux__)
+static bool
+check_for_kernel_module (void)
+{
+    FILE *f = NULL;
+    bool result = false;
+
+    f = fopen ("/proc/modules", "r");
+    if (f != NULL) {
+        char buffer[512] = { 0 };
+        while (!feof (f) && !ferror(f)) {
+            char *p = fgets (buffer, sizeof (buffer), f);
+            if (p != NULL) {
+                if (strstr(p, "garmin_gps") != NULL) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        fclose (f);
+    }
+
+    return result;
+}
+#else
+static bool check_for_kernel_module (void) { return false; };
+#endif
 
 /* 
    Open the USB connection with the first Garmin device we find.  Eventually,
@@ -60,6 +89,13 @@ garmin_open ( garmin_unit * garmin )
   int                  cnt;
   int                  err = 0;
   int                  i;
+  FILE                *f = NULL;
+  bool                 loaded = false;
+
+  if (check_for_kernel_module ()) {
+      printf("garmin_gps module is loaded; garmintools cannot work\n");
+      return 0;
+  }
 
   if ( garmin->usb.handle == NULL ) {
     if ( ctx == NULL ) {
