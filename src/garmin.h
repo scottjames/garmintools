@@ -24,6 +24,8 @@
 #include <stdio.h>
 #include <libusb.h>
 #include <math.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 
 /* ------------------------------------------------------------------------- */

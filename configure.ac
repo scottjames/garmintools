@@ -24,6 +24,17 @@ AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/time.h termios.h unistd.h])
 AC_TYPE_SIZE_T
 AC_STRUCT_TM
 
+AC_CHECK_SIZEOF([float])
+AS_IF([test "x$ac_cv_sizeof_float" = "x4"],[],
+      [
+        AC_MSG_ERROR([float is not a 32bit type])
+      ])
+AC_CHECK_SIZEOF([double])
+AS_IF([test "x$ac_cv_sizeof_double" = "x8"],[],
+      [
+       AC_MSG_ERROR([double is not a 64bit type])
+      ])
+
 # Checks for library functions.
 AC_FUNC_STRFTIME
 AC_CHECK_FUNCS([memset strerror])
