@@ -51,14 +51,13 @@
 
 /* types */
 
-typedef unsigned char   uint8;
-typedef unsigned short  uint16;
-typedef unsigned int    uint32;
-typedef short           sint16;
-typedef int             sint32;
-typedef float           float32;
-typedef double          float64;
-typedef unsigned char   gbool;
+typedef uint8_t  uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef int16_t  sint16;
+typedef int32_t  sint32;
+typedef float    float32;
+typedef double   float64;
 
 
 /* 2^31 semicircles = 180 degrees where N, E are positive, S and W negative. */
@@ -844,7 +843,7 @@ typedef enum {
 typedef struct D300 {
   position_type     posn;      /* position                        */
   uint32            time;      /* time                            */
-  gbool             new_trk;   /* new track segment?              */
+  bool              new_trk;   /* new track segment?              */
 } D300;
 
 
@@ -853,7 +852,7 @@ typedef struct D301 {
   uint32            time;     /* time                      */
   float32           alt;      /* altitude in meters        */
   float32           dpth;     /* depth in meters           */
-  gbool             new_trk;  /* new track segment?        */
+  bool              new_trk;  /* new track segment?        */
 } D301;
 
 
@@ -863,7 +862,7 @@ typedef struct D302 {
   float32           alt;
   float32           dpth;
   float32           temp;
-  gbool             new_trk;
+  bool              new_trk;
 } D302;
 
 
@@ -882,12 +881,12 @@ typedef struct D304 {
   float32           distance;
   uint8             heart_rate;
   uint8             cadence;
-  gbool             sensor;
+  bool              sensor;
 } D304;
 
 
 typedef struct D310 {
-  gbool         dspl;           /* display on the map?        */
+  bool          dspl;           /* display on the map?        */
   uint8         color;          /* color (same as D108)       */
   char *        trk_ident;      /* null-terminated string     */
 } D310;
@@ -899,7 +898,7 @@ typedef struct D311 {
 
 
 typedef struct D312 {
-  gbool         dspl;           /* display on the map?    */
+  bool          dspl;           /* display on the map?    */
   uint8         color;          /* color (same as D110)   */
   char *        trk_ident;      /* null-terminated string */
 } D312;
@@ -1030,7 +1029,7 @@ typedef struct D650 {
   float32           max_speed;
   float32           max_alt;
   float32           distance;
-  gbool             cross_country_flag;
+  bool              cross_country_flag;
   char *            departure_name;
   char *            departure_ident;
   char *            arrival_name;

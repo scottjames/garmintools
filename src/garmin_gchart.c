@@ -38,7 +38,7 @@ typedef struct D304_ext {
   float32             distance;
   uint8               heart_rate;
   uint8               cadence;
-  gbool               sensor;
+  bool                sensor;
 } D304_ext;
 
 typedef struct gchart_conf {
