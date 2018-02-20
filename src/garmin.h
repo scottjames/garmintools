@@ -2070,6 +2070,7 @@ int           garmin_init            ( garmin_unit *    garmin,
 /* ------------------------------------------------------------------------- */
 
 int     garmin_open           ( garmin_unit * garmin );
+int     garmin_shutdown       ( garmin_unit * garmin );
 int     garmin_close          ( garmin_unit * garmin );
 uint32  garmin_start_session  ( garmin_unit * garmin );
 int     garmin_read           ( garmin_unit * garmin, garmin_packet * p );
