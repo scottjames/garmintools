@@ -189,9 +189,6 @@ garmin_free_list_only ( garmin_list * l )
 }
 
 
-#define TRYFREE(x) if ( x != NULL ) free(x)
-
-
 void
 garmin_free_data ( garmin_data * d )
 {
@@ -214,63 +211,63 @@ garmin_free_data ( garmin_data * d )
 	switch ( d->type ) {
 	case data_D105:
 	  d105 = d->data;
-	  TRYFREE(d105->wpt_ident);
+	  free(d105->wpt_ident);
 	  break;
 	case data_D106:
 	  d106 = d->data;
-	  TRYFREE(d106->wpt_ident);
-	  TRYFREE(d106->lnk_ident);
+	  free(d106->wpt_ident);
+	  free(d106->lnk_ident);
 	  break;
 	case data_D108:
 	  d108 = d->data;
-	  TRYFREE(d108->ident);
-	  TRYFREE(d108->comment);
-	  TRYFREE(d108->facility);
-	  TRYFREE(d108->city);
-	  TRYFREE(d108->addr);
-	  TRYFREE(d108->cross_road);
+	  free(d108->ident);
+	  free(d108->comment);
+	  free(d108->facility);
+	  free(d108->city);
+	  free(d108->addr);
+	  free(d108->cross_road);
 	  break;
 	case data_D109:
 	  d109 = d->data;
-	  TRYFREE(d109->ident);
-	  TRYFREE(d109->comment);
-	  TRYFREE(d109->facility);
-	  TRYFREE(d109->city);
-	  TRYFREE(d109->addr);
-	  TRYFREE(d109->cross_road);
+	  free(d109->ident);
+	  free(d109->comment);
+	  free(d109->facility);
+	  free(d109->city);
+	  free(d109->addr);
+	  free(d109->cross_road);
 	  break;
 	case data_D110:
 	  d110 = d->data;
-	  TRYFREE(d110->ident);
-	  TRYFREE(d110->comment);
-	  TRYFREE(d110->facility);
-	  TRYFREE(d110->city);
-	  TRYFREE(d110->addr);
-	  TRYFREE(d110->cross_road);
+	  free(d110->ident);
+	  free(d110->comment);
+	  free(d110->facility);
+	  free(d110->city);
+	  free(d110->addr);
+	  free(d110->cross_road);
 	  break;
 	case data_D202:
 	  d202 = d->data;
-	  TRYFREE(d202->rte_ident);
+	  free(d202->rte_ident);
 	  break;
 	case data_D210:
 	  d210 = d->data;
-	  TRYFREE(d210->ident);
+	  free(d210->ident);
 	  break;
 	case data_D310:
 	  d310 = d->data;
-	  TRYFREE(d310->trk_ident);
+	  free(d310->trk_ident);
 	  break;
 	case data_D312:
 	  d312 = d->data;
-	  TRYFREE(d312->trk_ident);
+	  free(d312->trk_ident);
 	  break;
 	case data_D650:
 	  d650 = d->data;
-	  TRYFREE(d650->departure_name);
-	  TRYFREE(d650->departure_ident);
-	  TRYFREE(d650->arrival_name);
-	  TRYFREE(d650->arrival_ident);
-	  TRYFREE(d650->ac_id);
+	  free(d650->departure_name);
+	  free(d650->departure_ident);
+	  free(d650->arrival_name);
+	  free(d650->arrival_ident);
+	  free(d650->ac_id);
 	  break;
 	default:
 	  break;
