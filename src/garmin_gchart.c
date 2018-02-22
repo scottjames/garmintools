@@ -271,11 +271,11 @@ print_gchart_data ( garmin_data *  data,
 {
   D304 max;
   uint32 min_time=999999999;
-  d304strs enc_strs;
+  d304strs enc_strs = {0};
   int datapoints_num=0;
-  char str_d[1024];
-  char str_a[1024];
-  char str_t[1024];
+  char str_d[1024] = {0};
+  char str_a[1024] = {0};
+  char str_t[1024] = {0};
 
   enc_strs.distance = str_d;
   enc_strs.distance_len = 0;
