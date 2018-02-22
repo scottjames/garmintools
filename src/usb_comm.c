@@ -89,8 +89,6 @@ garmin_open ( garmin_unit * garmin )
   int                  cnt;
   int                  err = 0;
   int                  i;
-  FILE                *f = NULL;
-  bool                 loaded = false;
 
   if (check_for_kernel_module ()) {
       printf("garmin_gps module is loaded; garmintools cannot work\n");
@@ -208,8 +206,9 @@ garmin_open ( garmin_unit * garmin )
 	    }
 	  }
 
-      if (config)
+      if (config != NULL) {
           libusb_free_config_descriptor (config);
+      }
 
 	  /* We've found what should be the Garmin interface. */
 

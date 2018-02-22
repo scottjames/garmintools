@@ -1209,4 +1209,6 @@ garmin_shutdown (garmin_unit *garmin)
         free(*it);
     }
     free (garmin->extended.ext_data);
+
+    return 0;
 }
