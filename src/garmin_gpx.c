@@ -335,7 +335,7 @@ print_gpx_data ( garmin_data * data, FILE * fp, int spaces )
     print_close_tag("trk",fp,spaces);
     print_close_tag("gpx",fp,spaces);
 
-    free(laps[i]);
+    free(laps[0]);
     free(laps);
   }
 }
