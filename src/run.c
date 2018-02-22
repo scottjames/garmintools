@@ -179,7 +179,7 @@ get_track ( garmin_list * points, uint32 trk_index )
 
 
 void
-garmin_save_runs ( garmin_unit * garmin )
+garmin_save_runs ( garmin_unit * garmin)
 {
   garmin_data *       data;
   garmin_data *       data0;
@@ -201,31 +201,19 @@ garmin_save_runs ( garmin_unit * garmin )
   time_t              start_time;
   char                filename[BUFSIZ] = { 0 };
   char *              filedir = NULL;
-#ifdef __GNU__
   char *              path = NULL;
-#else
-  char                path[PATH_MAX] = { 0 };
-#endif /* __GNU__ */
   char                filepath[BUFSIZ] = { 0 };
   struct tm *         tbuf;
 
   if ( (filedir = getenv("GARMIN_SAVE_RUNS")) != NULL ) {
-#ifdef __GNU__
     filedir = realpath(filedir,NULL);
-#else
-    filedir = realpath(filedir,path);
-#endif /* __GNU__ */
     if ( filedir == NULL ) {
       printf("GARMIN_SAVE_RUNS: %s: %s\n",
 	     getenv("GARMIN_SAVE_RUNS"),strerror(errno));
     }
   }
   if ( filedir == NULL ) {
-#ifdef __GNU__
     filedir = getcwd(path,0);
-#else
-    filedir = getcwd(path,sizeof(path));
-#endif /* __GNU__ */
   }
 
   printf("Extracting data from Garmin %s\n",
@@ -368,4 +356,6 @@ garmin_save_runs ( garmin_unit * garmin )
   } else {
     printf("Unable to extract any data!\n");
   }
+
+  free (filedir);
 }
