@@ -76,7 +76,7 @@ get_gpx_data ( garmin_data *    fulldata,
     // fixme: crash if we didn't get it
     laps=glaps->elements+1;
 
-    *tracks = calloc(laps, sizeof(route_point));
+    *tracks = calloc(laps, sizeof(route_point *));
 
     curlapnum=0;
 
