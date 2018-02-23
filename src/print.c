@@ -1,17 +1,17 @@
 /*
   Garmintools software package
   Copyright (C) 2006-2008 Dave Bailey
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -23,7 +23,7 @@
 #include "garmin.h"
 
 
-/* 
+/*
    This file contains functions to print Garmin datatypes in an XML-like
    form.  The functions aim to reproduce the data losslessly, including
    floating point data, such that the data can be scanned back from the
@@ -72,10 +72,10 @@
   do {                                               \
     print_spaces(fp,spaces+x);                       \
     fprintf(fp,"<%s value=\"0x%x\" name=\"%s\"/>\n", \
-	    y,z,garmin_symbol_name(z));              \
+            y,z,garmin_symbol_name(z));              \
   } while ( 0 )
 
-#define GARMIN_TAGU8B(x,y,z,l)			     \
+#define GARMIN_TAGU8B(x,y,z,l)                             \
   do {                                               \
     int u8b;                                         \
                                                      \
@@ -108,7 +108,7 @@ print_spaces ( FILE * fp, int spaces )
 
 
 static void
-open_tag ( const char * tag, FILE * fp, int spaces ) 
+open_tag ( const char * tag, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<%s>\n",tag);
@@ -116,7 +116,7 @@ open_tag ( const char * tag, FILE * fp, int spaces )
 
 
 static void
-open_tag_with_type ( const char * tag, uint32 type, FILE * fp, int spaces ) 
+open_tag_with_type ( const char * tag, uint32 type, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<%s type=\"%d\">\n",tag,type);
@@ -124,7 +124,7 @@ open_tag_with_type ( const char * tag, uint32 type, FILE * fp, int spaces )
 
 
 static void
-close_tag ( const char * tag, FILE * fp, int spaces ) 
+close_tag ( const char * tag, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"</%s>\n",tag);
@@ -152,7 +152,7 @@ garmin_print_dtime ( uint32 t, FILE * fp, const char * label )
   char       buf[128] = { 0 };
   int        len;
 
-  /* 
+  /*
                                   012345678901234567890123
      This will make, for example, 2007-04-20T23:55:01-0700, but that date
      isn't quite ISO 8601 compliant.  We need to stick a ':' in the time
@@ -163,10 +163,10 @@ garmin_print_dtime ( uint32 t, FILE * fp, const char * label )
   localtime_r(&tval,&tmval);
   strftime(buf,sizeof(buf)-1,"%FT%T%z",&tmval);
 
-  /* 
-     If the last character is a 'Z', don't do anything.  Otherwise, we 
-     need to move the last two characters out one and stick a colon in 
-     the vacated spot.  Let's not forget the trailing '\0' that needs to 
+  /*
+     If the last character is a 'Z', don't do anything.  Otherwise, we
+     need to move the last two characters out one and stick a colon in
+     the vacated spot.  Let's not forget the trailing '\0' that needs to
      be moved as well.
   */
 
@@ -196,7 +196,7 @@ garmin_print_dpos ( position_type * pos, FILE * fp )
 }
 
 
-/* 
+/*
    Print a float32 with enough precision such that it can be reconstructed
    exactly from its decimal representation.
 */
@@ -232,7 +232,7 @@ garmin_print_float32 ( float32 f, FILE * fp )
 }
 
 
-/* 
+/*
    Print a float64 with enough precision such that it can be reconstructed
    exactly from its decimal representation.
 */
@@ -284,9 +284,9 @@ garmin_print_float64 ( float64 f, FILE * fp )
 }
 
 
-/* 
-   Print a float32 whose value is invalid (and should not be printed) if 
-   greater than 1.0e24 
+/*
+   Print a float32 whose value is invalid (and should not be printed) if
+   greater than 1.0e24
 */
 
 static void
@@ -309,7 +309,7 @@ garmin_print_ddist ( uint32 dur, float32 dist, FILE * fp )
   int  sec;
   int  min;
   int  hrs;
-  
+
   hun  = dur % 100;
   dur -= hun;
   dur /= 100;
@@ -711,12 +711,12 @@ garmin_print_d120 ( D120 * x, FILE * fp, int spaces )
   GARMIN_TAGSTR(0,"waypoint_category",x->name);
 }
 
- 
+
 /* --------------------------------------------------------------------------*/
 /* 7.4.13  D150                                                              */
 /* --------------------------------------------------------------------------*/
- 
- 
+
+
 GARMIN_ENUM_NAME(150,wpt_class) {
   GARMIN_ENUM_CASE(150,apt_wpt_class);
   GARMIN_ENUM_CASE(150,int_wpt_class);
@@ -729,7 +729,7 @@ GARMIN_ENUM_NAME(150,wpt_class) {
   GARMIN_ENUM_DEFAULT;
 }
 
-		  
+
 static void
 garmin_print_d150 ( D150 * x, FILE * fp, int spaces )
 {
@@ -802,7 +802,7 @@ GARMIN_ENUM_NAME(152,wpt_class) {
   GARMIN_ENUM_DEFAULT;
 }
 
-		  
+
 static void
 garmin_print_d152 ( D152 * x, FILE * fp, int spaces )
 {
@@ -937,7 +937,7 @@ garmin_print_d201 ( D201 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<route_header type=\"201\" number=\"%d\">%s</route_header>\n",
-	  x->nmbr,x->cmnt);
+          x->nmbr,x->cmnt);
 }
 
 
@@ -950,7 +950,7 @@ garmin_print_d202 ( D202 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<route_header type=\"202\" ident=\"%s\"/>\n",
-	  x->rte_ident);
+          x->rte_ident);
 }
 
 
@@ -974,7 +974,7 @@ garmin_print_d210 ( D210 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<route_link type=\"210\" class=\"%s\" ident=\"%s\">\n",
-	  garmin_d210_class(x->link_class),x->ident);
+          garmin_d210_class(x->link_class),x->ident);
   GARMIN_TAGU8B(1,"route_link_subclass",x->subclass,18);
   close_tag("route_link",fp,spaces);
 }
@@ -1094,9 +1094,9 @@ garmin_print_d310 ( D310 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<track type=\"310\" ident=\"%s\" color=\"%s\" "
-	  "display=\"%s\"/>\n",
-	  x->trk_ident,garmin_d108_color(x->color),
-	  (x->dspl) ? "true" : "false");
+          "display=\"%s\"/>\n",
+          x->trk_ident,garmin_d108_color(x->color),
+          (x->dspl) ? "true" : "false");
 }
 
 
@@ -1141,15 +1141,15 @@ GARMIN_ENUM_NAME(312,color) {
 
 static void
 garmin_print_d312 ( D312 * h,
-		    FILE *              fp,
-		    int                 spaces )
+                    FILE *              fp,
+                    int                 spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<track type=\"312\" ident=\"%s\" color=\"%s\" "
-	  "display=\"%s\"/>\n",
-	  h->trk_ident,
-	  garmin_d312_color(h->color),
-	  (h->dspl) ? "true" : "false");
+          "display=\"%s\"/>\n",
+          h->trk_ident,
+          garmin_d312_color(h->color),
+          (h->dspl) ? "true" : "false");
 }
 
 
@@ -1302,8 +1302,8 @@ garmin_print_d600 ( D600 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<date_time type=\"600\">"
-	  "%04d-%02d-%02d %02d:%02d:%02d</date_time>\n",
-	  x->year,x->month,x->day,x->hour,x->minute,x->second);
+          "%04d-%02d-%02d %02d:%02d:%02d</date_time>\n",
+          x->year,x->month,x->day,x->hour,x->minute,x->second);
 }
 
 
@@ -1325,7 +1325,7 @@ garmin_print_d650 ( D650 * x, FILE * fp, int spaces )
   GARMIN_TAGF32(1,"max_alt",x->max_alt);
   GARMIN_TAGF32(1,"distance",x->distance);
   GARMIN_TAGSTR(1,"cross_country_flag",
-		(x->cross_country_flag != 0) ? "true" : "false");
+                (x->cross_country_flag != 0) ? "true" : "false");
   GARMIN_TAGSTR(1,"departure_name",x->departure_name);
   GARMIN_TAGSTR(1,"departure_ident",x->departure_ident);
   GARMIN_TAGSTR(1,"arrival_name",x->arrival_name);
@@ -1344,7 +1344,7 @@ garmin_print_d700 ( D700 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<position type=\"700\" lat=\"%f\" lon=\"%f\"/>\n",
-	  RAD2DEG(x->lat),RAD2DEG(x->lon));
+          RAD2DEG(x->lat),RAD2DEG(x->lon));
 }
 
 
@@ -1458,16 +1458,16 @@ garmin_print_d1000 ( D1000 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<run type=\"1000\" track=\"%d\" sport=\"%s\">\n",
-	  x->track_index,garmin_d1000_sport_type(x->sport_type));
+          x->track_index,garmin_d1000_sport_type(x->sport_type));
   print_spaces(fp,spaces+1);
   fprintf(fp,"<laps first=\"%u\" last=\"%u\"/>\n",
-	  x->first_lap_index, x->last_lap_index);
+          x->first_lap_index, x->last_lap_index);
   GARMIN_TAGSTR(1,"program_type",
-		garmin_d1000_program_type(x->program_type));
+                garmin_d1000_program_type(x->program_type));
   if ( x->program_type == D1000_virtual_partner ) {
     print_spaces(fp,spaces+1);
     fprintf(fp,"<virtual_partner time=\"%u\" distance=\"%f\"/>\n",
-	    x->virtual_partner.time, x->virtual_partner.distance);
+            x->virtual_partner.time, x->virtual_partner.distance);
   }
   if ( x->program_type == D1000_workout ) {
     garmin_print_d1002(&x->workout,fp,spaces+1);
@@ -1513,7 +1513,7 @@ garmin_print_d1001 ( D1001 * x, FILE * fp, int spaces )
     GARMIN_TAGINT(1,"max_hr",x->max_heart_rate);
   }
   GARMIN_TAGSTR(1,"intensity",garmin_d1001_intensity(x->intensity));
-  close_tag("lap",fp,spaces);  
+  close_tag("lap",fp,spaces);
 }
 
 
@@ -1541,47 +1541,47 @@ garmin_print_d1002 ( D1002 * x, FILE * fp, int spaces )
 
   print_spaces(fp,spaces);
   fprintf(fp,"<workout type=\"1002\" name=\"%s\" steps=\"%d\" "
-	  "sport_type=\"%s\"",
-	  x->name,x->num_valid_steps,garmin_d1000_sport_type(x->sport_type));
+          "sport_type=\"%s\"",
+          x->name,x->num_valid_steps,garmin_d1000_sport_type(x->sport_type));
   if ( x->num_valid_steps > 0 ) {
     fprintf(fp,">\n");
     for ( i = 0; i < x->num_valid_steps; i++ ) {
       print_spaces(fp,spaces+1);
       fprintf(fp,"<step name=\"%s\">\n",x->steps[i].custom_name);
       GARMIN_TAGSTR(1,"intensity",
-		    garmin_d1001_intensity(x->steps[i].intensity));
+                    garmin_d1001_intensity(x->steps[i].intensity));
       print_spaces(fp,spaces+1);
       fprintf(fp,"<duration type=\"%s\">%d</duration>\n",
-	      garmin_d1002_duration_type(x->steps[i].duration_type),
-	      x->steps[i].duration_value);
+              garmin_d1002_duration_type(x->steps[i].duration_type),
+              x->steps[i].duration_value);
       print_spaces(fp,spaces+1);
       if ( x->steps[i].duration_type == D1002_repeat ) {
-	switch ( x->steps[i].target_type ) {
-	case 0:
-	  fprintf(fp,"<target type=\"speed_zone\" "
-		  "value=\"%d\" low=\"%f m/s\" high=\"%f m/s\"/>\n",
-		  x->steps[i].target_value,
-		  x->steps[i].target_custom_zone_low,
-		  x->steps[i].target_custom_zone_high);
-	  break;
-	case 1:
-	  fprintf(fp,"<target type=\"heart_rate_zone\" "
-		  "value=\"%d\" low=\"%f%s\" high=\"%f%s\"/>\n",
-		  x->steps[i].target_value,
-		  x->steps[i].target_custom_zone_low,
-		  (x->steps[i].target_custom_zone_low <= 100) ? "%" : " bpm",
-		  x->steps[i].target_custom_zone_high,
-		  (x->steps[i].target_custom_zone_high <= 100) ? "%" : " bpm");
-	  break;
-	case 2:
-	  fprintf(fp,"<target type=\"open\"/>\n");
-	  break;
-	default:
-	  break;
-	}
+        switch ( x->steps[i].target_type ) {
+        case 0:
+          fprintf(fp,"<target type=\"speed_zone\" "
+                  "value=\"%d\" low=\"%f m/s\" high=\"%f m/s\"/>\n",
+                  x->steps[i].target_value,
+                  x->steps[i].target_custom_zone_low,
+                  x->steps[i].target_custom_zone_high);
+          break;
+        case 1:
+          fprintf(fp,"<target type=\"heart_rate_zone\" "
+                  "value=\"%d\" low=\"%f%s\" high=\"%f%s\"/>\n",
+                  x->steps[i].target_value,
+                  x->steps[i].target_custom_zone_low,
+                  (x->steps[i].target_custom_zone_low <= 100) ? "%" : " bpm",
+                  x->steps[i].target_custom_zone_high,
+                  (x->steps[i].target_custom_zone_high <= 100) ? "%" : " bpm");
+          break;
+        case 2:
+          fprintf(fp,"<target type=\"open\"/>\n");
+          break;
+        default:
+          break;
+        }
       } else {
-	fprintf(fp,"<target type=\"repetitions\" value=\"%d\"/>\n",
-		x->steps[i].target_value);
+        fprintf(fp,"<target type=\"repetitions\" value=\"%d\"/>\n",
+                x->steps[i].target_value);
       }
       close_tag("step",fp,spaces+1);
     }
@@ -1601,7 +1601,7 @@ garmin_print_d1003 ( D1003 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<workout_occurrence type=\"1003\" name=\"%s\" day=\"%u\"/>\n",
-	  x->workout_name,x->day);
+          x->workout_name,x->day);
 }
 
 
@@ -1617,34 +1617,34 @@ garmin_print_d1004 ( D1004 *  d, FILE * fp, int spaces )
 
   print_spaces(fp,spaces);
   fprintf(fp,
-	  "<fitness_user_profile type=\"1004\" weight=\"%f\" "
-	  "birth_date=\"%04d-%02d-%02d\" gender=\"%s\">\n",
-	  d->weight,
-	  d->birth_year,
-	  d->birth_month,
-	  d->birth_day,
-	  (d->gender == D1004_male) ? "male" : "female");
+          "<fitness_user_profile type=\"1004\" weight=\"%f\" "
+          "birth_date=\"%04d-%02d-%02d\" gender=\"%s\">\n",
+          d->weight,
+          d->birth_year,
+          d->birth_month,
+          d->birth_day,
+          (d->gender == D1004_male) ? "male" : "female");
   open_tag("activities",fp,spaces+1);
   for ( i = 0; i < 3; i++ ) {
     print_spaces(fp,spaces+2);
     fprintf(fp,"<activity gear_weight=\"%f\" max_hr=\"%d\">\n",
-	    d->activities[i].gear_weight,
-	    d->activities[i].max_heart_rate);
+            d->activities[i].gear_weight,
+            d->activities[i].max_heart_rate);
     open_tag("hr_zones",fp,spaces+3);
     for ( j = 0; j < 5; j++ ) {
       print_spaces(fp,spaces+4);
       fprintf(fp,"<hr_zone low=\"%d\" high=\"%d\"/>\n",
-	      d->activities[i].heart_rate_zones[j].low_heart_rate,
-	      d->activities[i].heart_rate_zones[j].high_heart_rate);
+              d->activities[i].heart_rate_zones[j].low_heart_rate,
+              d->activities[i].heart_rate_zones[j].high_heart_rate);
     }
     close_tag("hr_zones",fp,spaces+3);
     open_tag("speed_zones",fp,spaces+3);
     for ( j = 0; j < 10; j++ ) {
       print_spaces(fp,spaces+4);
       fprintf(fp,"<speed_zone low=\"%f\" high=\"%f\" name=\"%s\"/>\n",
-	      d->activities[i].speed_zones[j].low_speed,
-	      d->activities[i].speed_zones[j].high_speed,
-	      d->activities[i].speed_zones[j].name);
+              d->activities[i].speed_zones[j].low_speed,
+              d->activities[i].speed_zones[j].high_speed,
+              d->activities[i].speed_zones[j].name);
     }
     close_tag("speed_zones",fp,spaces+3);
     close_tag("activity",fp,spaces+2);
@@ -1663,11 +1663,11 @@ garmin_print_d1005 ( D1005 * limits, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,
-	  "<workout_limits type=\"1005\" workouts=\"%d\" unscheduled=\"%d\" "
-	  "occurrences=\"%d\"/>\n",
-	  limits->max_workouts,
-	  limits->max_unscheduled_workouts,
-	  limits->max_occurrences);
+          "<workout_limits type=\"1005\" workouts=\"%d\" unscheduled=\"%d\" "
+          "occurrences=\"%d\"/>\n",
+          limits->max_workouts,
+          limits->max_unscheduled_workouts,
+          limits->max_occurrences);
 }
 
 
@@ -1680,10 +1680,10 @@ garmin_print_d1006 ( D1006 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<course type=\"1006\" index=\"%d\" name=\"%s\" "
-	  "track_index=\"%d\"/>\n",
-	  x->index,
-	  x->course_name,
-	  x->track_index);
+          "track_index=\"%d\"/>\n",
+          x->index,
+          x->course_name,
+          x->track_index);
 }
 
 
@@ -1696,8 +1696,8 @@ garmin_print_d1007 ( D1007 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<course_lap type=\"1007\" course_index=\"%d\" lap_index=\"%d\"",
-	  x->course_index,
-	  x->lap_index);
+          x->course_index,
+          x->lap_index);
   garmin_print_ddist(x->total_time,x->total_dist,fp);
   fprintf(fp,">\n");
   if ( x->begin.lat != 0x7fffffff && x->begin.lon != 0x7fffffff ) {
@@ -1749,12 +1749,12 @@ garmin_print_d1009 ( D1009 * run, FILE * fp, int spaces )
 
   print_spaces(fp,spaces);
   fprintf(fp,"<run type=\"1009\" track=\"%d\" sport=\"%s\" "
-	  "multisport=\"%s\">\n",
-	  run->track_index,garmin_d1000_sport_type(run->sport_type),
-	  garmin_d1009_multisport(run->multisport));
+          "multisport=\"%s\">\n",
+          run->track_index,garmin_d1000_sport_type(run->sport_type),
+          garmin_d1009_multisport(run->multisport));
   print_spaces(fp,spaces+1);
   fprintf(fp,"<laps first=\"%u\" last=\"%u\"/>\n",
-	  run->first_lap_index, run->last_lap_index);
+          run->first_lap_index, run->last_lap_index);
 
   if ( run->program_type != 0 ) {
     print_spaces(fp,spaces+1);
@@ -1767,7 +1767,7 @@ garmin_print_d1009 ( D1009 * run, FILE * fp, int spaces )
     }
     if ( run->program_type & 0x04 ) {
       fprintf(fp,"%s%s",(npt++) ? ", " : "", "quick_workout");
-    } 
+    }
     if ( run->program_type & 0x08 ) {
       fprintf(fp,"%s%s",(npt++) ? ", " : "", "course");
     }
@@ -1778,12 +1778,12 @@ garmin_print_d1009 ( D1009 * run, FILE * fp, int spaces )
       fprintf(fp,"%s%s",(npt++) ? ", " : "", "auto_multisport");
     }
     fprintf(fp,"</program_type>\n");
-  }  
+  }
 
   if ( run->program_type & 0x02 ) {
     print_spaces(fp,spaces+1);
     fprintf(fp,"<quick_workout time=\"%u\" distance=\"%f\"/>\n",
-	    run->quick_workout.time, run->quick_workout.distance);
+            run->quick_workout.time, run->quick_workout.distance);
   }
 
   if ( run->program_type & 0x01 ) {
@@ -1813,18 +1813,18 @@ garmin_print_d1010 ( D1010 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<run type=\"1010\" track=\"%d\" sport=\"%s\" "
-	  "multisport=\"%s\">\n",
-	  x->track_index,garmin_d1000_sport_type(x->sport_type),
-	  garmin_d1009_multisport(x->multisport));
+          "multisport=\"%s\">\n",
+          x->track_index,garmin_d1000_sport_type(x->sport_type),
+          garmin_d1009_multisport(x->multisport));
   print_spaces(fp,spaces+1);
   fprintf(fp,"<laps first=\"%u\" last=\"%u\"/>\n",
-	  x->first_lap_index, x->last_lap_index);
+          x->first_lap_index, x->last_lap_index);
   GARMIN_TAGSTR(1,"program_type",
-		garmin_d1010_program_type(x->program_type));
+                garmin_d1010_program_type(x->program_type));
   if ( x->program_type == D1010_virtual_partner ) {
     print_spaces(fp,spaces+1);
     fprintf(fp,"<virtual_partner time=\"%u\" distance=\"%f\"/>\n",
-	    x->virtual_partner.time, x->virtual_partner.distance);
+            x->virtual_partner.time, x->virtual_partner.distance);
   }
   garmin_print_d1002(&x->workout,fp,spaces+1);
   close_tag("run",fp,spaces);
@@ -1854,7 +1854,7 @@ garmin_print_d1011 ( D1011 * lap, FILE * fp, int spaces )
   garmin_print_dtime(lap->start_time,fp,"start");
   garmin_print_ddist(lap->total_time,lap->total_dist,fp);
   fprintf(fp," trigger=\"%s\">\n",
-	  garmin_d1011_trigger_method(lap->trigger_method));
+          garmin_d1011_trigger_method(lap->trigger_method));
   if ( lap->begin.lat != 0x7fffffff && lap->begin.lon != 0x7fffffff ) {
     GARMIN_TAGPOS(1,"begin_pos",lap->begin);
   }
@@ -1908,9 +1908,9 @@ garmin_print_d1012 ( D1012 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<course_point type=\"1012\" course_index=\"%d\" "
-	  "name=\"%s\" type=\"%s\">\n",
-	  x->course_index,x->name,
-	  garmin_d1012_point_type(x->point_type));
+          "name=\"%s\" type=\"%s\">\n",
+          x->course_index,x->name,
+          garmin_d1012_point_type(x->point_type));
   GARMIN_TAGU32(1,"track_point_time",x->track_point_time);
   close_tag("course_point",fp,spaces);
 }
@@ -1925,11 +1925,11 @@ garmin_print_d1013 ( D1013 * x, FILE * fp, int spaces )
 {
   print_spaces(fp,spaces);
   fprintf(fp,"<course_limits type=\"1013\" courses=\"%d\" laps=\"%d\" "
-	  "points=\"%d\" track_points=\"%d\"/>\n",
-	  x->max_courses,
-	  x->max_course_laps,
-	  x->max_course_pnt,
-	  x->max_course_trk_pnt);
+          "points=\"%d\" track_points=\"%d\"/>\n",
+          x->max_courses,
+          x->max_course_laps,
+          x->max_course_pnt,
+          x->max_course_trk_pnt);
 }
 
 
@@ -1945,7 +1945,7 @@ garmin_print_d1015 ( D1015 * lap, FILE * fp, int spaces )
   garmin_print_dtime(lap->start_time,fp,"start");
   garmin_print_ddist(lap->total_time,lap->total_dist,fp);
   fprintf(fp," trigger=\"%s\">\n",
-	  garmin_d1011_trigger_method(lap->trigger_method));
+          garmin_d1011_trigger_method(lap->trigger_method));
   if ( lap->begin.lat != 0x7fffffff && lap->begin.lon != 0x7fffffff ) {
     GARMIN_TAGPOS(1,"begin_pos",lap->begin);
   }
@@ -1964,7 +1964,7 @@ garmin_print_d1015 ( D1015 * lap, FILE * fp, int spaces )
     GARMIN_TAGINT(1,"avg_cadence",lap->avg_cadence);
   }
   GARMIN_TAGSTR(1,"intensity",garmin_d1001_intensity(lap->intensity));
-  GARMIN_TAGU8B(1,"unknown",lap->unknown,5);  
+  GARMIN_TAGU8B(1,"unknown",lap->unknown,5);
   close_tag("lap",fp,spaces);
 }
 
@@ -2059,8 +2059,8 @@ garmin_print_protocols ( garmin_unit * garmin, FILE * fp, int spaces )
     if ( garmin->protocol.x != appl_Anil ) {                              \
       print_spaces(fp,spaces+1);                                          \
       fprintf(fp,"<garmin_" #x                                            \
-	      " protocol=\"A%03d\" " #x "=\"D%03d\"/>\n",                 \
-	      garmin->protocol.x, garmin->datatype.x);                    \
+              " protocol=\"A%03d\" " #x "=\"D%03d\"/>\n",                 \
+              garmin->protocol.x, garmin->datatype.x);                    \
     }                                                                     \
   } while ( 0 )
 
@@ -2069,8 +2069,8 @@ garmin_print_protocols ( garmin_unit * garmin, FILE * fp, int spaces )
     if ( garmin->protocol.x.y != appl_Anil ) {                            \
       print_spaces(fp,spaces+2);                                          \
       fprintf(fp,"<garmin_" #x "_" #y                                     \
-	      " protocol=\"A%03d\" " #y "=\"D%03d\"/>\n",                 \
-	      garmin->protocol.x.y, garmin->datatype.x.y);                \
+              " protocol=\"A%03d\" " #y "=\"D%03d\"/>\n",                 \
+              garmin->protocol.x.y, garmin->datatype.x.y);                \
     }                                                                     \
   } while ( 0 )
 
@@ -2080,19 +2080,19 @@ garmin_print_protocols ( garmin_unit * garmin, FILE * fp, int spaces )
 
   print_spaces(fp,spaces+1);
   fprintf(fp,"<garmin_physical protocol=\"P%03d\"/>\n",
-	  garmin->protocol.physical);
+          garmin->protocol.physical);
 
   /* Link */
 
   print_spaces(fp,spaces+1);
   fprintf(fp,"<garmin_link protocol=\"L%03d\"/>\n",
-	  garmin->protocol.link);
+          garmin->protocol.link);
 
   /* Command */
 
   print_spaces(fp,spaces+1);
   fprintf(fp,"<garmin_command protocol=\"A%03d\"/>\n",
-	  garmin->protocol.command);
+          garmin->protocol.command);
 
   /* Waypoint */
 
@@ -2111,41 +2111,41 @@ garmin_print_protocols ( garmin_unit * garmin, FILE * fp, int spaces )
   if ( garmin->protocol.route != appl_Anil ) {
     print_spaces(fp,spaces+1);
     fprintf(fp,"<garmin_route protocol=\"A%03d\"",
-	    garmin->protocol.route);
+            garmin->protocol.route);
     if ( garmin->datatype.route.header != data_Dnil ) {
       fprintf(fp," header=\"D%03d\"",
-	      garmin->datatype.route.header);
+              garmin->datatype.route.header);
     }
     if ( garmin->datatype.route.waypoint != data_Dnil ) {
       fprintf(fp," waypoint=\"D%03d\"",
-	      garmin->datatype.route.waypoint);
+              garmin->datatype.route.waypoint);
     }
     if ( garmin->datatype.route.link != data_Dnil ) {
       fprintf(fp," link=\"D%03d\"",
-	      garmin->datatype.route.link);
+              garmin->datatype.route.link);
     }
     fprintf(fp,"/>\n");
   }
 
   /* Track */
-  
+
   if ( garmin->protocol.track != appl_Anil ) {
     print_spaces(fp,spaces+1);
     fprintf(fp,"<garmin_track protocol=\"A%03d\"",
-	    garmin->protocol.track);
+            garmin->protocol.track);
     if ( garmin->datatype.track.header != data_Dnil ) {
       fprintf(fp," header=\"D%03d\"",
-	      garmin->datatype.track.header);
+              garmin->datatype.track.header);
     }
     if ( garmin->datatype.track.data != data_Dnil ) {
       fprintf(fp," data=\"D%03d\"",
-	      garmin->datatype.track.data);
+              garmin->datatype.track.data);
     }
     fprintf(fp,"/>\n");
   }
-  
+
   /* Almanac, Date/Time, FlightBook, Position, PVT, Lap, Run */
-  
+
   PROTO1_AND_DATA(almanac);
   PROTO1_AND_DATA(date_time);
   PROTO1_AND_DATA(flightbook);
@@ -2153,9 +2153,9 @@ garmin_print_protocols ( garmin_unit * garmin, FILE * fp, int spaces )
   PROTO1_AND_DATA(pvt);
   PROTO1_AND_DATA(lap);
   PROTO1_AND_DATA(run);
-  
+
   /* Workout */
-  
+
   if ( garmin->protocol.workout.workout     != appl_Anil ||
        garmin->protocol.workout.occurrence  != appl_Anil ||
        garmin->protocol.workout.limits      != appl_Anil ) {
@@ -2165,13 +2165,13 @@ garmin_print_protocols ( garmin_unit * garmin, FILE * fp, int spaces )
     PROTO2_AND_DATA(workout,limits);
     close_tag("garmin_workout",fp,spaces+1);
   }
-  
+
   /* Fitness user profile */
-  
+
   PROTO1_AND_DATA(fitness);
-  
+
   /* Course */
-  
+
   if ( garmin->protocol.course.course != appl_Anil ||
        garmin->protocol.course.lap    != appl_Anil ||
        garmin->protocol.course.track  != appl_Anil ||
@@ -2180,29 +2180,29 @@ garmin_print_protocols ( garmin_unit * garmin, FILE * fp, int spaces )
     open_tag("garmin_course",fp,spaces+1);
     PROTO2_AND_DATA(course,course);
     PROTO2_AND_DATA(course,lap);
-    
+
     if ( garmin->protocol.course.track != appl_Anil ) {
       print_spaces(fp,spaces+2);
       fprintf(fp,"<garmin_course_track protocol=\"A%03d\"",
-	      garmin->protocol.course.track);
+              garmin->protocol.course.track);
       if ( garmin->datatype.course.track.header != data_Dnil ) {
-	fprintf(fp," header=\"D%03d\"",
-		garmin->datatype.course.track.header);
+        fprintf(fp," header=\"D%03d\"",
+                garmin->datatype.course.track.header);
       }
       if ( garmin->datatype.course.track.data != data_Dnil ) {
-	fprintf(fp," data=\"D%03d\"",
-		garmin->datatype.course.track.data);
+        fprintf(fp," data=\"D%03d\"",
+                garmin->datatype.course.track.data);
       }
-      close_tag("garmin_course_track",fp,spaces+1);      
+      close_tag("garmin_course_track",fp,spaces+1);
     }
-    
+
     PROTO2_AND_DATA(course,point);
     PROTO2_AND_DATA(course,limits);
     close_tag("garmin_course",fp,spaces+1);
   }
-  
+
   /* All done. */
-  
+
   close_tag("garmin_protocols",fp,spaces);
 
 #undef PROTO1_AND_DATA
@@ -2219,7 +2219,7 @@ garmin_print_info ( garmin_unit * unit, FILE * fp, int spaces )
   fprintf(fp,"<garmin_unit id=\"%x\">\n",unit->id);
   print_spaces(fp,spaces+1);
   fprintf(fp,"<garmin_product id=\"%d\" software_version=\"%.2f\">\n",
-	  unit->product.product_id,unit->product.software_version/100.0);
+          unit->product.product_id,unit->product.software_version/100.0);
   GARMIN_TAGSTR(2,"product_description",unit->product.product_description);
   if ( unit->product.additional_data != NULL ) {
     open_tag("additional_data_list",fp,spaces+2);
@@ -2235,7 +2235,7 @@ garmin_print_info ( garmin_unit * unit, FILE * fp, int spaces )
       GARMIN_TAGSTR(2,"extended_data",*s);
     }
     close_tag("extended_data_list",fp,spaces+1);
-  }  
+  }
   garmin_print_protocols(unit,fp,spaces+1);
   close_tag("garmin_unit",fp,spaces);
 }

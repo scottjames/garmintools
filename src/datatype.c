@@ -1,17 +1,17 @@
 /*
   Garmintools software package
   Copyright (C) 2006-2008 Dave Bailey
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -125,11 +125,11 @@ garmin_list_append ( garmin_list * list, garmin_data * data )
 
     n->data = data;
     n->next = NULL;
-    
+
     if ( l->head == NULL ) l->head = n;
     if ( l->tail != NULL ) l->tail->next = n;
     l->tail = n;
-    
+
     l->elements++;
   }
 
@@ -145,8 +145,8 @@ garmin_list_data ( garmin_data * data, uint32 which )
   garmin_list_node *  n;
   unsigned int        i;
 
-  if ( data                 != NULL       && 
-       data->type           == data_Dlist && 
+  if ( data                 != NULL       &&
+       data->type           == data_Dlist &&
        (list = data->data)  != NULL ) {
     for ( i = 0, n = list->head; i < which && n != NULL; i++, n = n->next );
     if ( n != NULL ) ret = n->data;
@@ -206,73 +206,73 @@ garmin_free_data ( garmin_data * d )
   if ( d != NULL ) {
     if ( d->data != NULL ) {
       if ( d->type == data_Dlist ) {
-	garmin_free_list((garmin_list *)d->data);
+        garmin_free_list((garmin_list *)d->data);
       } else {
-	switch ( d->type ) {
-	case data_D105:
-	  d105 = d->data;
-	  free(d105->wpt_ident);
-	  break;
-	case data_D106:
-	  d106 = d->data;
-	  free(d106->wpt_ident);
-	  free(d106->lnk_ident);
-	  break;
-	case data_D108:
-	  d108 = d->data;
-	  free(d108->ident);
-	  free(d108->comment);
-	  free(d108->facility);
-	  free(d108->city);
-	  free(d108->addr);
-	  free(d108->cross_road);
-	  break;
-	case data_D109:
-	  d109 = d->data;
-	  free(d109->ident);
-	  free(d109->comment);
-	  free(d109->facility);
-	  free(d109->city);
-	  free(d109->addr);
-	  free(d109->cross_road);
-	  break;
-	case data_D110:
-	  d110 = d->data;
-	  free(d110->ident);
-	  free(d110->comment);
-	  free(d110->facility);
-	  free(d110->city);
-	  free(d110->addr);
-	  free(d110->cross_road);
-	  break;
-	case data_D202:
-	  d202 = d->data;
-	  free(d202->rte_ident);
-	  break;
-	case data_D210:
-	  d210 = d->data;
-	  free(d210->ident);
-	  break;
-	case data_D310:
-	  d310 = d->data;
-	  free(d310->trk_ident);
-	  break;
-	case data_D312:
-	  d312 = d->data;
-	  free(d312->trk_ident);
-	  break;
-	case data_D650:
-	  d650 = d->data;
-	  free(d650->departure_name);
-	  free(d650->departure_ident);
-	  free(d650->arrival_name);
-	  free(d650->arrival_ident);
-	  free(d650->ac_id);
-	  break;
-	default:
-	  break;
-	}
-	free(d->data);
+        switch ( d->type ) {
+        case data_D105:
+          d105 = d->data;
+          free(d105->wpt_ident);
+          break;
+        case data_D106:
+          d106 = d->data;
+          free(d106->wpt_ident);
+          free(d106->lnk_ident);
+          break;
+        case data_D108:
+          d108 = d->data;
+          free(d108->ident);
+          free(d108->comment);
+          free(d108->facility);
+          free(d108->city);
+          free(d108->addr);
+          free(d108->cross_road);
+          break;
+        case data_D109:
+          d109 = d->data;
+          free(d109->ident);
+          free(d109->comment);
+          free(d109->facility);
+          free(d109->city);
+          free(d109->addr);
+          free(d109->cross_road);
+          break;
+        case data_D110:
+          d110 = d->data;
+          free(d110->ident);
+          free(d110->comment);
+          free(d110->facility);
+          free(d110->city);
+          free(d110->addr);
+          free(d110->cross_road);
+          break;
+        case data_D202:
+          d202 = d->data;
+          free(d202->rte_ident);
+          break;
+        case data_D210:
+          d210 = d->data;
+          free(d210->ident);
+          break;
+        case data_D310:
+          d310 = d->data;
+          free(d310->trk_ident);
+          break;
+        case data_D312:
+          d312 = d->data;
+          free(d312->trk_ident);
+          break;
+        case data_D650:
+          d650 = d->data;
+          free(d650->departure_name);
+          free(d650->departure_ident);
+          free(d650->arrival_name);
+          free(d650->arrival_ident);
+          free(d650->ac_id);
+          break;
+        default:
+          break;
+        }
+        free(d->data);
       }
     }
     free(d);
@@ -280,7 +280,7 @@ garmin_free_data ( garmin_data * d )
 }
 
 
-/* 
+/*
    Returns the number of bytes needed in order to serialize the data.  Note
    that this is an upper bound!  Some of the Garmin data structures do not
    align to word boundaries.  Their memory representation will take up more
@@ -294,11 +294,11 @@ garmin_data_size ( garmin_data * d )
   garmin_list_node *  node;
   uint32              bytes = 0;
 
-  /* 
+  /*
      The number of bytes needed in order to serialize a Garmin data structure
      is almost equal to the size of its data structure - but not quite.  If
      we have variable length strings, we need to add their string lengths
-     (including space for the terminating '\0') and subtract the size of the 
+     (including space for the terminating '\0') and subtract the size of the
      char * placeholders.  We also need 4 bytes for the data type, and 4
      additional bytes in which we store the number of bytes that we should
      seek forward in order to skip this record.  This allows us to handle
@@ -364,75 +364,75 @@ garmin_data_size ( garmin_data * d )
   if ( d != NULL ) {
     if ( d->data != NULL ) {
       if ( d->type == data_Dlist ) {
-	list = d->data;
-	bytes += 16;  /* { datatype, bytes, list ID, element count } */
-	for ( node = list->head; node != NULL; node = node->next ) {
-	  bytes += 4; /* list ID */
-	  bytes += garmin_data_size(node->data);
-	}
+        list = d->data;
+        bytes += 16;  /* { datatype, bytes, list ID, element count } */
+        for ( node = list->head; node != NULL; node = node->next ) {
+          bytes += 4; /* list ID */
+          bytes += garmin_data_size(node->data);
+        }
       } else {
-	switch ( d->type ) {
+        switch ( d->type ) {
         DATASIZE0(100);
         DATASIZE0(101);
         DATASIZE0(102);
         DATASIZE0(103);
         DATASIZE0(104);
-	DATASIZE1(105,wpt_ident);
-	DATASIZE2(106,wpt_ident,lnk_ident);
-	DATASIZE0(107);
-	DATASIZE6(108,ident,comment,facility,city,addr,cross_road);
-	DATASIZE6(109,ident,comment,facility,city,addr,cross_road);
-	DATASIZE6(110,ident,comment,facility,city,addr,cross_road);
-	DATASIZE0(120);
-	DATASIZE0(150);
-	DATASIZE0(151);
-	DATASIZE0(152);
-	DATASIZE0(154);
-	DATASIZE0(155);
-	DATASIZE0(200);
-	DATASIZE0(201);
-	DATASIZE1(202,rte_ident);
-	DATASIZE1(210,ident);
-	DATASIZE0(300);
-	DATASIZE0(301);
-	DATASIZE0(302);
-	DATASIZE0(303);
-	DATASIZE0(304);
-	DATASIZE1(310,trk_ident);
-	DATASIZE0(311);
-	DATASIZE1(312,trk_ident);
-	DATASIZE0(400);
-	DATASIZE0(403);
-	DATASIZE0(450);
-	DATASIZE0(500);
-	DATASIZE0(501);
-	DATASIZE0(550);
-	DATASIZE0(551);
-	DATASIZE0(600);
-	DATASIZE5(650,departure_name,departure_ident,
-		  arrival_name,arrival_ident,ac_id);
-	DATASIZE0(700);
-	DATASIZE0(800);
-	DATASIZE0(906);
-	DATASIZE0(1000);
-	DATASIZE0(1001);
-	DATASIZE0(1002);
-	DATASIZE0(1003);
-	DATASIZE0(1004);
-	DATASIZE0(1005);
-	DATASIZE0(1006);
-	DATASIZE0(1007);
-	DATASIZE0(1008);
-	DATASIZE0(1009);
-	DATASIZE0(1010);
-	DATASIZE0(1011);
-	DATASIZE0(1012);
-	DATASIZE0(1013);
-	DATASIZE0(1015);
-	default:
-	  printf("garmin_data_size: data type %d not supported\n",d->type);
-	  break;
-	}
+        DATASIZE1(105,wpt_ident);
+        DATASIZE2(106,wpt_ident,lnk_ident);
+        DATASIZE0(107);
+        DATASIZE6(108,ident,comment,facility,city,addr,cross_road);
+        DATASIZE6(109,ident,comment,facility,city,addr,cross_road);
+        DATASIZE6(110,ident,comment,facility,city,addr,cross_road);
+        DATASIZE0(120);
+        DATASIZE0(150);
+        DATASIZE0(151);
+        DATASIZE0(152);
+        DATASIZE0(154);
+        DATASIZE0(155);
+        DATASIZE0(200);
+        DATASIZE0(201);
+        DATASIZE1(202,rte_ident);
+        DATASIZE1(210,ident);
+        DATASIZE0(300);
+        DATASIZE0(301);
+        DATASIZE0(302);
+        DATASIZE0(303);
+        DATASIZE0(304);
+        DATASIZE1(310,trk_ident);
+        DATASIZE0(311);
+        DATASIZE1(312,trk_ident);
+        DATASIZE0(400);
+        DATASIZE0(403);
+        DATASIZE0(450);
+        DATASIZE0(500);
+        DATASIZE0(501);
+        DATASIZE0(550);
+        DATASIZE0(551);
+        DATASIZE0(600);
+        DATASIZE5(650,departure_name,departure_ident,
+                  arrival_name,arrival_ident,ac_id);
+        DATASIZE0(700);
+        DATASIZE0(800);
+        DATASIZE0(906);
+        DATASIZE0(1000);
+        DATASIZE0(1001);
+        DATASIZE0(1002);
+        DATASIZE0(1003);
+        DATASIZE0(1004);
+        DATASIZE0(1005);
+        DATASIZE0(1006);
+        DATASIZE0(1007);
+        DATASIZE0(1008);
+        DATASIZE0(1009);
+        DATASIZE0(1010);
+        DATASIZE0(1011);
+        DATASIZE0(1012);
+        DATASIZE0(1013);
+        DATASIZE0(1015);
+        default:
+          printf("garmin_data_size: data type %d not supported\n",d->type);
+          break;
+        }
       }
     }
   }

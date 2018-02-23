@@ -1,17 +1,17 @@
 /*
   Garmintools software package
   Copyright (C) 2006-2008 Dave Bailey
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -177,7 +177,7 @@ typedef enum {
 
   sym_begin_custom   = 7680,  /* first user customizable symbol   */
   sym_end_custom     = 8191,  /* last user customizable symbol    */
-  
+
   /* Land symbols */
 
   sym_is_hwy         = 8192,  /* interstate hwy symbol            */
@@ -296,7 +296,7 @@ typedef enum {
   sym_letter_a_blue  = 8317,  /* blue letter 'A' symbol           */
   sym_letter_b_blue  = 8318,  /* blue letter 'B' symbol           */
   sym_letter_c_blue  = 8319,  /* blue letter 'C' symbol           */
-  sym_letter_d_blue  = 8320,  /* blue letter 'D' symbol           */  
+  sym_letter_d_blue  = 8320,  /* blue letter 'D' symbol           */
   sym_number_0_red   = 8321,  /* red number '0' symbol            */
   sym_number_1_red   = 8322,  /* red number '1' symbol            */
   sym_number_2_red   = 8323,  /* red number '2' symbol            */
@@ -335,7 +335,7 @@ typedef enum {
   sym_food_italian   = 8361,  /* italian food symbol              */
   sym_food_seafood   = 8362,  /* seafood food symbol              */
   sym_food_steak     = 8363,  /* steak symbol                     */
-  
+
   /* Aviation symbols */
 
   sym_airport        = 16384, /* airport symbol                   */
@@ -696,8 +696,8 @@ typedef struct D151 {
 } D151;
 
 
-/* 
-   The enumerated values for the "wpt_class" member of the D151 are: 
+/*
+   The enumerated values for the "wpt_class" member of the D151 are:
 */
 
 typedef enum {
@@ -708,7 +708,7 @@ typedef enum {
 } D151_wpt_class;
 
 
-typedef struct D152 { 
+typedef struct D152 {
   char            ident[6];        /* identifier                     */
   position_type   posn;            /* position                       */
   uint32          unused;          /* should be set to zero          */
@@ -932,7 +932,7 @@ typedef struct D400 {
 } D400;
 
 
-typedef struct D403 { 
+typedef struct D403 {
   D103   wpt;  /* waypoint                          */
   float32         dst;  /* proximity distance (meters)       */
 } D403;
@@ -1506,7 +1506,7 @@ typedef union garmin_packet {
     uint8            reserved1;
     uint8            reserved2;
     uint8            reserved3;
-    uint8            id[2];        /*  bytes 4-5   */ 
+    uint8            id[2];        /*  bytes 4-5   */
     uint8            reserved4;
     uint8            reserved5;
     uint8            size[4];      /*  bytes 8-11  */
@@ -1601,7 +1601,7 @@ typedef enum {
   A011_Cmnd_Transfer_Prx                  = 0x0011,
   A011_Cmnd_Transfer_Time                 = 0x0014,
   A011_Cmnd_Transfer_Wpt                  = 0x0015,
-  A011_Cmnd_Turn_Off_Pwr                  = 0x001a,  
+  A011_Cmnd_Turn_Off_Pwr                  = 0x001a,
 } A011_command_id;
 
 
@@ -1716,7 +1716,7 @@ typedef enum {
   /* Invalid Pid */
 
   Pid_Nil,
-  
+
   /* L000 Pids */
 
   Pid_Protocol_Array,
@@ -1975,10 +1975,10 @@ extern "C" {
 /* ------------------------------------------------------------------------- */
 
 uint16      garmin_lpid ( link_protocol     link,
-			  garmin_pid        gpid );
+                          garmin_pid        gpid );
 
 garmin_pid  garmin_gpid ( link_protocol     link,
-			  uint16            lpid );
+                          uint16            lpid );
 
 
 /* ------------------------------------------------------------------------- */
@@ -1986,21 +1986,21 @@ garmin_pid  garmin_gpid ( link_protocol     link,
 /* ------------------------------------------------------------------------- */
 
 garmin_data * garmin_load          ( const char *     filename );
-garmin_data * garmin_unpack_packet ( garmin_packet *  p, 
-				     garmin_datatype  type );
+garmin_data * garmin_unpack_packet ( garmin_packet *  p,
+                                     garmin_datatype  type );
 garmin_data * garmin_unpack        ( uint8 **         buf,
-				     garmin_datatype  type );
+                                     garmin_datatype  type );
 
 
 /* ------------------------------------------------------------------------- */
 /* pack.c                                                                    */
 /* ------------------------------------------------------------------------- */
 
-uint32 garmin_save ( garmin_data * data, 
-		     const char *  filename, 
-		     const char *  dir );
-uint32 garmin_pack ( garmin_data * data, 
-		     uint8 **      buf );
+uint32 garmin_save ( garmin_data * data,
+                     const char *  filename,
+                     const char *  dir );
+uint32 garmin_pack ( garmin_data * data,
+                     uint8 **      buf );
 
 
 /* ------------------------------------------------------------------------- */
@@ -2018,14 +2018,14 @@ void garmin_print_info      ( garmin_unit * unit, FILE * fp, int spaces );
 
 
 int  garmin_command_supported ( garmin_unit *    garmin,
-				garmin_command   cmd );
+                                garmin_command   cmd );
 
-int  garmin_make_command_packet ( garmin_unit *    garmin, 
-				  garmin_command   cmd,
-				  garmin_packet *  packet );
-     
-int  garmin_send_command ( garmin_unit *    garmin, 
-			   garmin_command   cmd );
+int  garmin_make_command_packet ( garmin_unit *    garmin,
+                                  garmin_command   cmd,
+                                  garmin_packet *  packet );
+
+int  garmin_send_command ( garmin_unit *    garmin,
+                           garmin_command   cmd );
 
 
 /* ------------------------------------------------------------------------- */
@@ -2058,12 +2058,12 @@ garmin_data * garmin_read_a1008      ( garmin_unit *    garmin );
 garmin_data * garmin_read_a1009      ( garmin_unit *    garmin );
 garmin_data * garmin_read_a1012      ( garmin_unit *    garmin );
 
-garmin_data * garmin_read_via        ( garmin_unit *    garmin, 
-				       appl_protocol    protocol );
-garmin_data * garmin_get             ( garmin_unit *    garmin, 
-				       garmin_get_type  what );
+garmin_data * garmin_read_via        ( garmin_unit *    garmin,
+                                       appl_protocol    protocol );
+garmin_data * garmin_get             ( garmin_unit *    garmin,
+                                       garmin_get_type  what );
 int           garmin_init            ( garmin_unit *    garmin,
-				       int              verbose );
+                                       int              verbose );
 
 
 /* ------------------------------------------------------------------------- */
@@ -2081,13 +2081,13 @@ uint16  garmin_packet_id      ( garmin_packet * p );
 uint32  garmin_packet_size    ( garmin_packet * p );
 uint8 * garmin_packet_data    ( garmin_packet * p );
 
-void    garmin_print_packet   ( garmin_packet *  p, 
-				int              dir, 
-				FILE *           fp );
+void    garmin_print_packet   ( garmin_packet *  p,
+                                int              dir,
+                                FILE *           fp );
 int     garmin_packetize      ( garmin_packet *  p,
-				uint16           id, 
-				uint32           size, 
-				uint8 *          data );
+                                uint16           id,
+                                uint32           size,
+                                uint8 *          data );
 
 
 /* ------------------------------------------------------------------------- */
@@ -2120,10 +2120,10 @@ char **  get_strings ( garmin_packet * p, int * offset );
 
 garmin_data * garmin_alloc_data     ( garmin_datatype type );
 garmin_list * garmin_alloc_list     ( void );
-garmin_list * garmin_list_append    ( garmin_list * list, 
-				      garmin_data * data );
-garmin_data * garmin_list_data      ( garmin_data * data, 
-				      uint32        which );
+garmin_list * garmin_list_append    ( garmin_list * list,
+                                      garmin_data * data );
+garmin_data * garmin_list_data      ( garmin_data * data,
+                                      uint32        which );
 void          garmin_free_list      ( garmin_list * l );
 void          garmin_free_list_only ( garmin_list * l );
 void          garmin_free_data      ( garmin_data * d );

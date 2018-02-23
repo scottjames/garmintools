@@ -1,17 +1,17 @@
 /*
   Garmintools software package
   Copyright (C) 2006-2008 Dave Bailey
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -28,9 +28,9 @@
 /* ------------------------------------------------------------------------- */
 
 static void
-garmin_assign_protocol ( garmin_unit *  garmin, 
-			 uint16         protocol,
-			 uint16 *       datatypes )
+garmin_assign_protocol ( garmin_unit *  garmin,
+                         uint16         protocol,
+                         uint16 *       datatypes )
 {
   /* Unknown protocols and their data types are ignored. */
 
@@ -41,10 +41,10 @@ garmin_assign_protocol ( garmin_unit *  garmin,
     break;
 
   case appl_A100:
-    garmin->protocol.waypoint.waypoint   = protocol;  
+    garmin->protocol.waypoint.waypoint   = protocol;
     garmin->datatype.waypoint.waypoint   = datatypes[0];
     break;
-    
+
   case appl_A101:
     garmin->protocol.waypoint.category   = protocol;
     garmin->datatype.waypoint.category   = datatypes[0];
@@ -215,8 +215,8 @@ merge_strings ( char ** one, char ** two )
 
 static garmin_data *
 garmin_read_singleton ( garmin_unit *     garmin,
-			garmin_pid        pid,
-			garmin_datatype   type )
+                        garmin_pid        pid,
+                        garmin_datatype   type )
 {
   garmin_data *     d = NULL;
   garmin_packet     p;
@@ -244,8 +244,8 @@ garmin_read_singleton ( garmin_unit *     garmin,
 
 static garmin_data *
 garmin_read_records ( garmin_unit *     garmin,
-		      garmin_pid        pid,
-		      garmin_datatype   type )
+                      garmin_pid        pid,
+                      garmin_datatype   type )
 {
   garmin_data *     d         = NULL;
   garmin_list *     l         = NULL;
@@ -262,8 +262,8 @@ garmin_read_records ( garmin_unit *     garmin,
       expected = get_uint16(p.packet.data);
 
       if ( garmin->verbose != 0 ) {
-	printf("[garmin] Pid_Records indicates %d packets to follow\n",
-	       expected);
+        printf("[garmin] Pid_Records indicates %d packets to follow\n",
+               expected);
       }
 
       /* Allocate a list for the records. */
@@ -271,29 +271,29 @@ garmin_read_records ( garmin_unit *     garmin,
       d = garmin_alloc_data(data_Dlist);
       l = (garmin_list *)d->data;
 
-      /* 
-	 Now we expect packets with the given packet_id and datatype, up
-	 until the final packet, which is a Pid_Xfer_Cmplt.
+      /*
+         Now we expect packets with the given packet_id and datatype, up
+         until the final packet, which is a Pid_Xfer_Cmplt.
       */
 
       while ( !done && garmin_read(garmin,&p) > 0 ) {
-	ppid = garmin_gpid(link,garmin_packet_id(&p));
-	if ( ppid == Pid_Xfer_Cmplt ) {
-	  if ( got != expected ) {
-	    /* Incorrect number of packets received. */
-	    printf("garmin_read_records: expected %d packets, got %d\n",
-		   expected,got);
-	  } else if ( garmin->verbose != 0 ) {
-	    printf("[garmin] all %d expected packets received\n",got);
-	  }
-	  done = 1;
-	} else if ( ppid == pid ) {
-	  garmin_list_append(l,garmin_unpack_packet(&p,type));
-	  got++;
-	} else {
-	  /* Unexpected packet ID! */
-	  done = 1;
-	}
+        ppid = garmin_gpid(link,garmin_packet_id(&p));
+        if ( ppid == Pid_Xfer_Cmplt ) {
+          if ( got != expected ) {
+            /* Incorrect number of packets received. */
+            printf("garmin_read_records: expected %d packets, got %d\n",
+                   expected,got);
+          } else if ( garmin->verbose != 0 ) {
+            printf("[garmin] all %d expected packets received\n",got);
+          }
+          done = 1;
+        } else if ( ppid == pid ) {
+          garmin_list_append(l,garmin_unpack_packet(&p,type));
+          got++;
+        } else {
+          /* Unexpected packet ID! */
+          done = 1;
+        }
       }
     } else {
       /* Expected Pid_Records but got something else. */
@@ -312,10 +312,10 @@ garmin_read_records ( garmin_unit *     garmin,
 
 static garmin_data *
 garmin_read_records2 ( garmin_unit *     garmin,
-		       garmin_pid        pid1,
-		       garmin_datatype   type1,
-		       garmin_pid        pid2,
-		       garmin_datatype   type2 )
+                       garmin_pid        pid1,
+                       garmin_datatype   type1,
+                       garmin_pid        pid2,
+                       garmin_datatype   type2 )
 {
   garmin_data *     d         = NULL;
   garmin_list *     l         = NULL;
@@ -332,68 +332,68 @@ garmin_read_records2 ( garmin_unit *     garmin,
       expected = get_uint16(p.packet.data);
 
       if ( garmin->verbose != 0 ) {
-	printf("[garmin] Pid_Records indicates %d packets to follow\n",
-	       expected);
+        printf("[garmin] Pid_Records indicates %d packets to follow\n",
+               expected);
       }
-      
+
       /* Allocate a list for the records. */
 
       d = garmin_alloc_data(data_Dlist);
       l = (garmin_list *)d->data;
 
       while ( state >= 0 && garmin_read(garmin,&p) > 0 ) {
-	ppid = garmin_gpid(link,garmin_packet_id(&p));
-	if ( ppid == Pid_Xfer_Cmplt ) {
-	  /* transfer complete! */
-	  if ( got != expected ) {
-	    /* wrong number of packets received! */
-	    printf("garmin_read_records2: expected %d packets, got %d\n",
-		   expected,got);
-	  } else if ( garmin->verbose != 0 ) {
-	    printf("[garmin] all %d expected packets received\n",got);
-	  }
-	  break;
-	}
-	switch ( state ) {
-	case 0:  /* want pid1 */
-	  if ( ppid == pid1 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type1));
-	    state = 1;
-	    got++;
-	  } else {
-	    state = -1;
-	  }
-	  break;
-	case 1:  /* want pid2 */
-	  if ( ppid == pid2 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type2));
-	    state = 2;
-	    got++;
-	  } else {
-	    state = -1;
-	  }
-	  break;
-	case 2: /* want pid2 or pid1 */
-	  if ( ppid == pid1 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type1));
-	    state = 1;
-	    got++;
-	  } else if ( ppid == pid2 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type2));
-	    state = 2;
-	    got++;
-	  } else {
-	    state = -1;
-	  }
-	  break;
-	default:
-	  state = -1;
-	  break;
-	}
+        ppid = garmin_gpid(link,garmin_packet_id(&p));
+        if ( ppid == Pid_Xfer_Cmplt ) {
+          /* transfer complete! */
+          if ( got != expected ) {
+            /* wrong number of packets received! */
+            printf("garmin_read_records2: expected %d packets, got %d\n",
+                   expected,got);
+          } else if ( garmin->verbose != 0 ) {
+            printf("[garmin] all %d expected packets received\n",got);
+          }
+          break;
+        }
+        switch ( state ) {
+        case 0:  /* want pid1 */
+          if ( ppid == pid1 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type1));
+            state = 1;
+            got++;
+          } else {
+            state = -1;
+          }
+          break;
+        case 1:  /* want pid2 */
+          if ( ppid == pid2 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type2));
+            state = 2;
+            got++;
+          } else {
+            state = -1;
+          }
+          break;
+        case 2: /* want pid2 or pid1 */
+          if ( ppid == pid1 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type1));
+            state = 1;
+            got++;
+          } else if ( ppid == pid2 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type2));
+            state = 2;
+            got++;
+          } else {
+            state = -1;
+          }
+          break;
+        default:
+          state = -1;
+          break;
+        }
       }
       if ( state < 0 ) {
-	/* Unexpected packet received. */
-	printf("garmin_read_records2: unexpected packet %d received\n",ppid);
+        /* Unexpected packet received. */
+        printf("garmin_read_records2: unexpected packet %d received\n",ppid);
       }
     } else {
       /* Expected Pid_Records but got something else. */
@@ -412,12 +412,12 @@ garmin_read_records2 ( garmin_unit *     garmin,
 
 static garmin_data *
 garmin_read_records3 ( garmin_unit *     garmin,
-		       garmin_pid        pid1,
-		       garmin_datatype   type1,
-		       garmin_pid        pid2,
-		       garmin_datatype   type2,
-		       garmin_pid        pid3,
-		       garmin_datatype   type3 )
+                       garmin_pid        pid1,
+                       garmin_datatype   type1,
+                       garmin_pid        pid2,
+                       garmin_datatype   type2,
+                       garmin_pid        pid3,
+                       garmin_datatype   type3 )
 {
   garmin_data *     d         = NULL;
   garmin_list *     l         = NULL;
@@ -434,8 +434,8 @@ garmin_read_records3 ( garmin_unit *     garmin,
       expected = get_uint16(p.packet.data);
 
       if ( garmin->verbose != 0 ) {
-	printf("[garmin] Pid_Records indicates %d packets to follow\n",
-	       expected);
+        printf("[garmin] Pid_Records indicates %d packets to follow\n",
+               expected);
       }
 
       /* Allocate a list for the records. */
@@ -444,67 +444,67 @@ garmin_read_records3 ( garmin_unit *     garmin,
       l = (garmin_list *)d->data;
 
       while ( state >= 0 && garmin_read(garmin,&p) > 0 ) {
-	ppid = garmin_gpid(link,garmin_packet_id(&p));
-	if ( ppid == Pid_Xfer_Cmplt ) {
-	  /* transfer complete! */
-	  if ( got != expected ) {
-	    /* wrong number of packets received! */
-	    printf("garmin_read_records3: expected %d packets, got %d\n",
-		   expected,got);
-	  } else if ( garmin->verbose != 0 ) {
-	    printf("[garmin] all %d expected packets received\n",got);
-	  }
-	  break;
-	}
-	switch ( state ) {
-	case 0:  /* want pid1 */
-	  if ( ppid == pid1 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type1));
-	    state = 1;
-	    got++;
-	  } else {
-	    state = -1;
-	  }
-	  break;
-	case 1:  /* want pid2 */
-	  if ( ppid == pid2 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type2));
-	    state = 2;
-	    got++;
-	  } else {
-	    state = -1;
-	  }
-	  break;
-	case 2: /* want pid3 */
-	  if ( ppid == pid3 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type3));
-	    state = 3;
-	    got++;
-	  } else {
-	    state = -1;
-	  }
-	  break;
-	case 3: /* want pid2 or pid1 */
-	  if ( ppid == pid1 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type1));
-	    state = 1;
-	    got++;
-	  } else if ( ppid == pid2 ) {
-	    garmin_list_append(l,garmin_unpack_packet(&p,type2));
-	    state = 2;
-	    got++;
-	  } else {
-	    state = -1;
-	  }
-	  break;
-	default:
-	  state = -1;
-	  break;
-	}
+        ppid = garmin_gpid(link,garmin_packet_id(&p));
+        if ( ppid == Pid_Xfer_Cmplt ) {
+          /* transfer complete! */
+          if ( got != expected ) {
+            /* wrong number of packets received! */
+            printf("garmin_read_records3: expected %d packets, got %d\n",
+                   expected,got);
+          } else if ( garmin->verbose != 0 ) {
+            printf("[garmin] all %d expected packets received\n",got);
+          }
+          break;
+        }
+        switch ( state ) {
+        case 0:  /* want pid1 */
+          if ( ppid == pid1 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type1));
+            state = 1;
+            got++;
+          } else {
+            state = -1;
+          }
+          break;
+        case 1:  /* want pid2 */
+          if ( ppid == pid2 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type2));
+            state = 2;
+            got++;
+          } else {
+            state = -1;
+          }
+          break;
+        case 2: /* want pid3 */
+          if ( ppid == pid3 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type3));
+            state = 3;
+            got++;
+          } else {
+            state = -1;
+          }
+          break;
+        case 3: /* want pid2 or pid1 */
+          if ( ppid == pid1 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type1));
+            state = 1;
+            got++;
+          } else if ( ppid == pid2 ) {
+            garmin_list_append(l,garmin_unpack_packet(&p,type2));
+            state = 2;
+            got++;
+          } else {
+            state = -1;
+          }
+          break;
+        default:
+          state = -1;
+          break;
+        }
       }
       if ( state < 0 ) {
-	/* Unexpected packet received. */
-	printf("garmin_read_records3: unexpected packet %d received\n",ppid);
+        /* Unexpected packet received. */
+        printf("garmin_read_records3: unexpected packet %d received\n",ppid);
       }
     } else {
       /* Expected Pid_Records but got something else. */
@@ -540,13 +540,13 @@ garmin_read_a000_a001 ( garmin_unit * garmin )
   uint16 *               datatypes;
 
   /* Send the product request */
-  
+
   memset (&p, 0, sizeof (p));
   garmin_packetize(&p,L000_Pid_Product_Rqst,0,NULL);
   garmin_write(garmin,&p);
 
   /* Read the response. */
-  
+
   while ( !done && garmin_read(garmin,&p) > 0 ) {
     switch ( garmin_packet_id(&p) ) {
     case L000_Pid_Product_Data:
@@ -556,13 +556,13 @@ garmin_read_a000_a001 ( garmin_unit * garmin )
       r->software_version = get_sint16(p.packet.data+2);
       pos = 4;
       if ( r->product_description != NULL ) {
-	free(r->product_description);
+        free(r->product_description);
       }
-      r->product_description = get_string(&p,&pos);      
+      r->product_description = get_string(&p,&pos);
       r->additional_data = merge_strings(r->additional_data,
-					 get_strings(&p,&pos));
+                                         get_strings(&p,&pos));
       break;
-      
+
     case L000_Pid_Ext_Product_Data:
       e = &garmin->extended;
       /* These strings should be ignored, but we save them anyway. */
@@ -575,27 +575,27 @@ garmin_read_a000_a001 ( garmin_unit * garmin )
       size = garmin_packet_size(&p) / 3;
       datatypes = calloc(size,sizeof(uint16));
       for ( i = 0; i < size; i++ ) {
-	tag  = p.packet.data[3*i];
-	data = get_uint16(p.packet.data + 3*i + 1);	
-	switch ( tag ) {
-	case Tag_Phys_Prot_Id:  
-	  garmin->protocol.physical = data;
-	  break;
-	case Tag_Link_Prot_Id:
-	  garmin->protocol.link = data;
-	  break;
-	case Tag_Appl_Prot_Id:
-	  memset(datatypes,0,size * sizeof(uint16));
-	  for ( j = i+1; p.packet.data[3*j] == Tag_Data_Type_Id; j++ ) {
-	    datatypes[j-i-1] = get_uint16(p.packet.data + 3*j + 1);
-	  }
-	  garmin_assign_protocol(garmin,data,datatypes);
-	  break;
-	case Tag_Data_Type_Id:
-	  /* Skip, since we should already have handled them. */
-	default:
-	  break;
-	}
+        tag  = p.packet.data[3*i];
+        data = get_uint16(p.packet.data + 3*i + 1);
+        switch ( tag ) {
+        case Tag_Phys_Prot_Id:
+          garmin->protocol.physical = data;
+          break;
+        case Tag_Link_Prot_Id:
+          garmin->protocol.link = data;
+          break;
+        case Tag_Appl_Prot_Id:
+          memset(datatypes,0,size * sizeof(uint16));
+          for ( j = i+1; p.packet.data[3*j] == Tag_Data_Type_Id; j++ ) {
+            datatypes[j-i-1] = get_uint16(p.packet.data + 3*j + 1);
+          }
+          garmin_assign_protocol(garmin,data,datatypes);
+          break;
+        case Tag_Data_Type_Id:
+          /* Skip, since we should already have handled them. */
+        default:
+          break;
+        }
       }
       free(datatypes);
       done = 1;
@@ -620,8 +620,8 @@ garmin_read_a100 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Wpt) != 0 ) {
     d = garmin_read_records(garmin,
-			    Pid_Wpt_Data,
-			    garmin->datatype.waypoint.waypoint);
+                            Pid_Wpt_Data,
+                            garmin->datatype.waypoint.waypoint);
   }
 
   return d;
@@ -639,8 +639,8 @@ garmin_read_a101 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Wpt_Cats) != 0 ) {
     d = garmin_read_records(garmin,
-			    Pid_Wpt_Cat,
-			    garmin->datatype.waypoint.category);
+                            Pid_Wpt_Cat,
+                            garmin->datatype.waypoint.category);
   }
 
   return d;
@@ -658,10 +658,10 @@ garmin_read_a200 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Rte) != 0 ) {
     d = garmin_read_records2(garmin,
-			     Pid_Rte_Hdr,
-			     garmin->datatype.route.header,
-			     Pid_Rte_Wpt_Data,
-			     garmin->datatype.waypoint.waypoint);
+                             Pid_Rte_Hdr,
+                             garmin->datatype.route.header,
+                             Pid_Rte_Wpt_Data,
+                             garmin->datatype.waypoint.waypoint);
   }
 
   return d;
@@ -679,12 +679,12 @@ garmin_read_a201 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Rte) != 0 ) {
     d = garmin_read_records3(garmin,
-			     Pid_Rte_Hdr,
-			     garmin->datatype.route.header,
-			     Pid_Rte_Wpt_Data,
-			     garmin->datatype.route.waypoint,
-			     Pid_Rte_Link_Data,
-			     garmin->datatype.route.link);
+                             Pid_Rte_Hdr,
+                             garmin->datatype.route.header,
+                             Pid_Rte_Wpt_Data,
+                             garmin->datatype.route.waypoint,
+                             Pid_Rte_Link_Data,
+                             garmin->datatype.route.link);
   }
 
   return d;
@@ -702,8 +702,8 @@ garmin_read_a300 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Trk) != 0 ) {
     d = garmin_read_records(garmin,
-			    Pid_Trk_Data,
-			    garmin->datatype.track.data);
+                            Pid_Trk_Data,
+                            garmin->datatype.track.data);
   }
 
   return d;
@@ -721,10 +721,10 @@ garmin_read_a301 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Trk) != 0 ) {
     d = garmin_read_records2(garmin,
-			     Pid_Trk_Hdr,
-			     garmin->datatype.track.header,
-			     Pid_Trk_Data,
-			     garmin->datatype.track.data);
+                             Pid_Trk_Hdr,
+                             garmin->datatype.track.header,
+                             Pid_Trk_Data,
+                             garmin->datatype.track.data);
   }
 
   return d;
@@ -753,8 +753,8 @@ garmin_read_a400 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Prx) != 0 ) {
     d = garmin_read_records(garmin,
-			    Pid_Prx_Wpt_Data,
-			    garmin->datatype.waypoint.proximity);
+                            Pid_Prx_Wpt_Data,
+                            garmin->datatype.waypoint.proximity);
   }
 
   return d;
@@ -772,8 +772,8 @@ garmin_read_a500 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Alm) != 0 ) {
     d = garmin_read_records(garmin,
-			    Pid_Almanac_Data,
-			    garmin->datatype.almanac);
+                            Pid_Almanac_Data,
+                            garmin->datatype.almanac);
   }
 
   return d;
@@ -790,8 +790,8 @@ garmin_read_a600 ( garmin_unit * garmin )
   garmin_data * d = NULL;
 
   d = garmin_read_singleton(garmin,
-			    Pid_Date_Time_Data,
-			    garmin->datatype.date_time);
+                            Pid_Date_Time_Data,
+                            garmin->datatype.date_time);
 
   return d;
 }
@@ -808,8 +808,8 @@ garmin_read_a650 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_FlightBook_Transfer) ) {
     d = garmin_read_records(garmin,
-			    Pid_FlightBook_Record,
-			    garmin->datatype.flightbook);
+                            Pid_FlightBook_Record,
+                            garmin->datatype.flightbook);
   }
 
   return d;
@@ -826,8 +826,8 @@ garmin_read_a700 ( garmin_unit * garmin )
   garmin_data * d;
 
   d = garmin_read_singleton(garmin,
-			    Pid_Position_Data,
-			    garmin->datatype.position);
+                            Pid_Position_Data,
+                            garmin->datatype.position);
 
   return d;
 }
@@ -843,8 +843,8 @@ garmin_read_a800 ( garmin_unit * garmin )
   garmin_data * d;
 
   d = garmin_read_singleton(garmin,
-			    Pid_Pvt_Data,
-			    garmin->datatype.pvt);
+                            Pid_Pvt_Data,
+                            garmin->datatype.pvt);
 
   return d;
 }
@@ -883,7 +883,7 @@ garmin_read_a1000 ( garmin_unit * garmin )
     d = garmin_alloc_data(data_Dlist);
     l = d->data;
     garmin_list_append(l,garmin_read_records(garmin,Pid_Run,
-					     garmin->datatype.run));
+                                             garmin->datatype.run));
     garmin_list_append(l,garmin_read_a906(garmin));
     garmin_list_append(l,garmin_read_a302(garmin));
   }
@@ -908,9 +908,9 @@ garmin_read_a1002 ( garmin_unit * garmin )
     d = garmin_alloc_data(data_Dlist);
     l = d->data;
     garmin_list_append(l,
-		       garmin_read_records(garmin,
-					   Pid_Workout,
-					   garmin->datatype.workout.workout));
+                       garmin_read_records(garmin,
+                                           Pid_Workout,
+                                           garmin->datatype.workout.workout));
     garmin_list_append(l,garmin_read_a1003(garmin));
   }
 
@@ -931,8 +931,8 @@ garmin_read_a1003 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Workout_Occurrences) != 0 ) {
     d = garmin_read_records(garmin,
-			    Pid_Workout_Occurrence,
-			    garmin->datatype.workout.occurrence);
+                            Pid_Workout_Occurrence,
+                            garmin->datatype.workout.occurrence);
   }
 
   return d;
@@ -950,8 +950,8 @@ garmin_read_a1004 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Fitness_User_Profile) != 0 ) {
     d = garmin_read_singleton(garmin,
-			      Pid_Fitness_User_Profile,
-			      garmin->datatype.fitness);
+                              Pid_Fitness_User_Profile,
+                              garmin->datatype.fitness);
   }
 
   return d;
@@ -969,8 +969,8 @@ garmin_read_a1005 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Workout_Limits) != 0 ) {
     d = garmin_read_singleton(garmin,
-			      Pid_Workout_Limits,
-			      garmin->datatype.workout.limits);
+                              Pid_Workout_Limits,
+                              garmin->datatype.workout.limits);
   }
 
   return d;
@@ -991,8 +991,8 @@ garmin_read_a1006 ( garmin_unit * garmin )
     d = garmin_alloc_data(data_Dlist);
     l = d->data;
     garmin_list_append(l,garmin_read_records(garmin,
-					     Pid_Course,
-					     garmin->datatype.course.course));
+                                             Pid_Course,
+                                             garmin->datatype.course.course));
     garmin_list_append(l,garmin_read_a1007(garmin));
     garmin_list_append(l,garmin_read_a1012(garmin));
     garmin_list_append(l,garmin_read_a1008(garmin));
@@ -1013,10 +1013,10 @@ garmin_read_a1007 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Course_Laps) != 0 ) {
     d = garmin_read_records(garmin,
-			    Pid_Course_Lap,
-			    (garmin->datatype.course.lap != data_Dnil) ?
-			    garmin->datatype.course.lap :
-			    garmin->datatype.lap);
+                            Pid_Course_Lap,
+                            (garmin->datatype.course.lap != data_Dnil) ?
+                            garmin->datatype.course.lap :
+                            garmin->datatype.lap);
   }
 
   return d;
@@ -1034,8 +1034,8 @@ garmin_read_a1008 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Course_Points) != 0 ) {
     d = garmin_read_records(garmin,
-			    Pid_Course_Point,
-			    garmin->datatype.course.point);
+                            Pid_Course_Point,
+                            garmin->datatype.course.point);
   }
 
   return d;
@@ -1053,8 +1053,8 @@ garmin_read_a1009 ( garmin_unit * garmin )
 
   if ( garmin_send_command(garmin,Cmnd_Transfer_Course_Limits) != 0 ) {
     d = garmin_read_singleton(garmin,
-			      Pid_Course_Limits,
-			      garmin->datatype.course.limits);
+                              Pid_Course_Limits,
+                              garmin->datatype.course.limits);
   }
 
   return d;
@@ -1071,7 +1071,7 @@ garmin_read_a1012 ( garmin_unit * garmin )
   garmin_datatype  header;
   garmin_datatype  data;
   garmin_data *    d = NULL;
-  
+
   if ( garmin_send_command(garmin,Cmnd_Transfer_Course_Tracks) != 0 ) {
 
     if ( garmin->datatype.course.track.header != data_Dnil ) {
@@ -1087,10 +1087,10 @@ garmin_read_a1012 ( garmin_unit * garmin )
     }
 
     d = garmin_read_records2(garmin,
-			     Pid_Course_Trk_Hdr,
-			     header,
-			     Pid_Course_Trk_Data,
-			     data);
+                             Pid_Course_Trk_Hdr,
+                             header,
+                             Pid_Course_Trk_Data,
+                             data);
   }
 
   return d;

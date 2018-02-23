@@ -59,7 +59,7 @@ get_gpx_data ( garmin_data *    fulldata,
   float               minlon =  180.0;
   float               maxlon = -180.0;
   int                 ok     = 0;
-  garmin_data *		data;
+  garmin_data *                data;
   garmin_list *     glaps;
   route_point*     points;
   int               laps;
@@ -100,74 +100,74 @@ get_gpx_data ( garmin_data *    fulldata,
       pause=0;
 
       for ( node = dlist->head; node != NULL; node = node->next ) {
-	point = node->data;
+        point = node->data;
 
-	switch (point->type) {
-	  case data_D304: // position point
+        switch (point->type) {
+          case data_D304: // position point
 
-	    d304 = point->data;
+            d304 = point->data;
 
-	    if ( d304->posn.lat == 0x7fffffff && d304->posn.lon == 0x7fffffff ) {
-	      pause++;
-	      continue;
-	    }
+            if ( d304->posn.lat == 0x7fffffff && d304->posn.lon == 0x7fffffff ) {
+              pause++;
+              continue;
+            }
 
-	    rp->lap=0;
-	    if (lapdata!=NULL) {
-	      if (d304->time >= lapdata->start_time) {
-		if (curlapnum>0) {
-		  rp->t=0; // end previous lap
-		  rp++;
-		  (*tracks)[curlapnum]=rp; // new track
-		}
-		curlapnum++;
+            rp->lap=0;
+            if (lapdata!=NULL) {
+              if (d304->time >= lapdata->start_time) {
+                if (curlapnum>0) {
+                  rp->t=0; // end previous lap
+                  rp++;
+                  (*tracks)[curlapnum]=rp; // new track
+                }
+                curlapnum++;
 
-		rp->lap=curlapnum;
-		if (d304->time != lapdata->start_time) {
-		  // if lap start point doesn't exist, create it
-		  rp->lat = SEMI2DEG(lapdata->begin.lat);
-		  rp->lon = SEMI2DEG(lapdata->begin.lon);
+                rp->lap=curlapnum;
+                if (d304->time != lapdata->start_time) {
+                  // if lap start point doesn't exist, create it
+                  rp->lat = SEMI2DEG(lapdata->begin.lat);
+                  rp->lon = SEMI2DEG(lapdata->begin.lon);
 
-		  rp->elev = d304->alt; // lap data doesn't contain alt :(
-		  rp->hr=d304->heart_rate;
-		  rp->cad=d304->cadence;
+                  rp->elev = d304->alt; // lap data doesn't contain alt :(
+                  rp->hr=d304->heart_rate;
+                  rp->cad=d304->cadence;
 
-		  rp->t = lapdata->start_time;
-		  rp++;
-		  rp->lap=0;
-		  rp->pause=0;
-		}
-		lapnode=lapnode->next;
-		if (lapnode!=NULL)
-		  lapdata=lapnode->data->data;
-		else
-		  lapdata=NULL; // last lap
-	      }
-	    }
+                  rp->t = lapdata->start_time;
+                  rp++;
+                  rp->lap=0;
+                  rp->pause=0;
+                }
+                lapnode=lapnode->next;
+                if (lapnode!=NULL)
+                  lapdata=lapnode->data->data;
+                else
+                  lapdata=NULL; // last lap
+              }
+            }
 
-	    rp->lat = SEMI2DEG(d304->posn.lat);
-	    rp->lon = SEMI2DEG(d304->posn.lon);
-	    rp->elev = d304->alt;
-	    rp->t = d304->time;
-	    rp->hr=d304->heart_rate;
-	    rp->cad=d304->cadence;
+            rp->lat = SEMI2DEG(d304->posn.lat);
+            rp->lon = SEMI2DEG(d304->posn.lon);
+            rp->elev = d304->alt;
+            rp->t = d304->time;
+            rp->hr=d304->heart_rate;
+            rp->cad=d304->cadence;
 
 
-	    if (pause==2) {
-	      rp->pause=1;
-	      pause=0;
-	    } else rp->pause=0;
+            if (pause==2) {
+              rp->pause=1;
+              pause=0;
+            } else rp->pause=0;
 
-	    if ( rp->lat < minlat ) minlat = rp->lat;
-	    if ( rp->lat > maxlat ) maxlat = rp->lat;
-	    if ( rp->lon < minlon ) minlon = rp->lon;
-	    if ( rp->lon > maxlon ) maxlon = rp->lon;
+            if ( rp->lat < minlat ) minlat = rp->lat;
+            if ( rp->lat > maxlat ) maxlat = rp->lat;
+            if ( rp->lon < minlon ) minlon = rp->lon;
+            if ( rp->lon > maxlon ) maxlon = rp->lon;
 
-	    ++rp;
-	    break;
-	  default: //printf("unknown frame %i\n", point->type);
-	    ;
-	}
+            ++rp;
+            break;
+          default: //printf("unknown frame %i\n", point->type);
+            ;
+        }
       }
       rp->t = 0;
 
@@ -294,12 +294,12 @@ print_route_points ( route_point * points,
       print_spaces(fp, spaces+2);
       fprintf(fp,"<gpxtpx:TrackPointExtension>\n");
       if (rp->hr != 0) {
-	print_spaces(fp, spaces+4);
-	fprintf(fp,"<gpxtpx:hr>%i</gpxtpx:hr>\n",rp->hr);
+        print_spaces(fp, spaces+4);
+        fprintf(fp,"<gpxtpx:hr>%i</gpxtpx:hr>\n",rp->hr);
       }
       if (rp->cad != 0xff) {
-	print_spaces(fp, spaces+4);
-	fprintf(fp,"<gpxtpx:cad>%i</gpxtpx:cad>\n",rp->cad);
+        print_spaces(fp, spaces+4);
+        fprintf(fp,"<gpxtpx:cad>%i</gpxtpx:cad>\n",rp->cad);
       }
 
       print_close_tag("gpxtpx:TrackPointExtension", fp, spaces+2);
@@ -346,13 +346,13 @@ main ( int argc, char ** argv )
 {
   garmin_data * data;
   int           i;
-  
+
   for ( i = 1; i < argc; i++ ) {
     if ( (data = garmin_load(argv[i])) != NULL ) {
       print_gpx_data(data,stdout,0);
       garmin_free_data(data);
     }
   }
-  
+
   return 0;
 }

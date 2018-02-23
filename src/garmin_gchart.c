@@ -19,7 +19,7 @@
 
 /* Type Defs */
 typedef struct d304strs {
-  char*  time;		
+  char*  time;
   int    time_len;
   char*  alt;
   int    alt_len;
@@ -60,15 +60,15 @@ static char gchart_e_encode_single(int num) {
     if (num < 0 )
         return '_';
     if (num <= 25 )
-	return 'A' + num;
+        return 'A' + num;
     if (num <= 51 )
-	return 'a' + num - 26;
+        return 'a' + num - 26;
     if (num <= 61 )
-	return '0' + num - 52;
+        return '0' + num - 52;
     if (num == 62 )
-	return '-';
+        return '-';
     if (num == 63 )
-	return '.';
+        return '.';
     return '_';
 }
 
@@ -91,11 +91,11 @@ gchart_e_encode ( float32 num, float32 max, char * str )
 }
 
 
-static void 
-get_gchart_max_data ( garmin_data *  data, 
-		      D304 *         max, 
-		      int *          datapoints_num, 
-		      uint32 *       min_time )
+static void
+get_gchart_max_data ( garmin_data *  data,
+                      D304 *         max,
+                      int *          datapoints_num,
+                      uint32 *       min_time )
 {
   garmin_list *       dlist;
   garmin_list_node *  node;
@@ -112,23 +112,23 @@ get_gchart_max_data ( garmin_data *  data,
     data = garmin_list_data(data,2);
     if ( data->type == data_Dlist ) {
       dlist = data->data;
-      
+
       (*datapoints_num)=0;
       for ( node = dlist->head; node != NULL; node = node->next ) {
-	point = node->data;
-	if ( point->type == data_D304 ) {
-	  (*datapoints_num)++;
-	  d304 = point->data;
-	  if ( d304->distance > max->distance && d304->distance < 1.0e24 )
-	    max->distance = d304->distance;
-	  if ( d304->alt > max->alt && d304->alt < 1.0e24)
-	    max->alt = d304->alt;
-	  if ( d304->time > max->time ) max->time = d304->time;
-	  if ( d304->time < (*min_time) ) (*min_time) = d304->time;
-	  if ( d304->heart_rate > max->heart_rate )
-	    max->heart_rate = d304->heart_rate;
-	  if ( d304->cadence > max->cadence ) max->cadence = d304->cadence;
-	} 
+        point = node->data;
+        if ( point->type == data_D304 ) {
+          (*datapoints_num)++;
+          d304 = point->data;
+          if ( d304->distance > max->distance && d304->distance < 1.0e24 )
+            max->distance = d304->distance;
+          if ( d304->alt > max->alt && d304->alt < 1.0e24)
+            max->alt = d304->alt;
+          if ( d304->time > max->time ) max->time = d304->time;
+          if ( d304->time < (*min_time) ) (*min_time) = d304->time;
+          if ( d304->heart_rate > max->heart_rate )
+            max->heart_rate = d304->heart_rate;
+          if ( d304->cadence > max->cadence ) max->cadence = d304->cadence;
+        }
       }
     }
   }
@@ -137,12 +137,12 @@ get_gchart_max_data ( garmin_data *  data,
 
 static int
 get_gchart_data ( garmin_data *  data,
-		  gchart_conf *  conf,
-		  D304 *         max,
-		  int            datapoints_num,
-		  d304strs*      encoded_strings,
-		  int            e_str_len,
-		  int            min_time )
+                  gchart_conf *  conf,
+                  D304 *         max,
+                  int            datapoints_num,
+                  d304strs*      encoded_strings,
+                  int            e_str_len,
+                  int            min_time )
 {
   garmin_list *       dlist;
   garmin_list_node *  node;
@@ -151,9 +151,9 @@ get_gchart_data ( garmin_data *  data,
   D304_ext            total;
   int           ok     = 0;
   int j = 0;
-  int i = 0; 
+  int i = 0;
   int np = 0;
-  
+
   total.time = 0;
   total.distance = 0;
   total.alt = 0;
@@ -164,7 +164,7 @@ get_gchart_data ( garmin_data *  data,
     data = garmin_list_data(data,2);
     if ( data->type == data_Dlist ) {
       dlist = data->data;
-      
+
       np = (int)ceil(datapoints_num / (conf->width / conf->pixperdp));
       i=1;
 
@@ -172,87 +172,87 @@ get_gchart_data ( garmin_data *  data,
 
       /* printf("summarizing: "); */
       for ( node = dlist->head; node != NULL; node = node->next ) {
-	point = node->data;
-	if ( point->type == data_D304 ) {
+        point = node->data;
+        if ( point->type == data_D304 ) {
 
-	  d304 = point->data;
+          d304 = point->data;
 
-	  total.time += d304->time;
-	  /* printf("--------- %d %d %lld\n", d304->time, j, total.time); */
-	  total.distance += d304->distance;
-	  total.alt += d304->alt;
+          total.time += d304->time;
+          /* printf("--------- %d %d %lld\n", d304->time, j, total.time); */
+          total.distance += d304->distance;
+          total.alt += d304->alt;
 #if 0
-	  total.heart_rate += d304->heart_rate; 
-	  total.cadence += d304->cadence;
+          total.heart_rate += d304->heart_rate;
+          total.cadence += d304->cadence;
 #endif
 
-	  if ( d304->posn.lat == 0x7fffffff && d304->posn.lon == 0x7fffffff )
-	    continue;
+          if ( d304->posn.lat == 0x7fffffff && d304->posn.lon == 0x7fffffff )
+            continue;
 
-	  if ( ++j % np == 0 ) { 
-	    char str[3] = { 0 };
-	    int d=(total.distance == 0) ? 0 : (int)total.distance/np;
-	    int a=(total.alt == 0) ? 0 : (int)total.alt/np;
-	    int t=(total.time == 0) ? 0 : (int)(total.time/np);
+          if ( ++j % np == 0 ) {
+            char str[3] = { 0 };
+            int d=(total.distance == 0) ? 0 : (int)total.distance/np;
+            int a=(total.alt == 0) ? 0 : (int)total.alt/np;
+            int t=(total.time == 0) ? 0 : (int)(total.time/np);
 #if 0
-	    /* printf("--------- %d -- np: %d\n", t, np); */
-	    int h=(total.heart_rate == 0) ? 0 : total.heart_rate/np;
-	    int c=(total.cadence == 0) ? 0 : total.cadence/np;
-#endif	    
-	    switch (conf->encode_method) {
-	    case EXT_ENC:
-	      gchart_e_encode(t - min_time, max->time - min_time, str);
-	      encoded_strings->time_len += 
-		sprintf(encoded_strings->time + encoded_strings->time_len, "%s", str); 
-	      
-	      gchart_e_encode(d, max->distance, str);
-	      encoded_strings->distance_len += 
-		sprintf(encoded_strings->distance + encoded_strings->distance_len, "%s", str); 
-	      
-	      gchart_e_encode(a, max->alt, str);
-	      encoded_strings->alt_len += 
-		sprintf(encoded_strings->alt + encoded_strings->alt_len, "%s", str);
-	      break;
-	    case TXT_ENC:
-	      /* printf("-- Encoding time: %d (%d) of %d (%d)\n", t, t-min_time, max->time, max->time - min_time); */
-	      encoded_strings->time_len += 
-		sprintf(encoded_strings->time + encoded_strings->time_len, "%.1f,", 
-			gchart_t_encode(t- min_time, max->time - min_time)); 
-	      
-	      encoded_strings->distance_len += 
-		sprintf(encoded_strings->distance + encoded_strings->distance_len, "%.1f,", 
-			gchart_t_encode(d, max->distance)); 
-	      
-	      encoded_strings->alt_len += 
-		sprintf(encoded_strings->alt + encoded_strings->alt_len, "%.1f,", 
-			gchart_t_encode(a, max->alt));
-	      break;
+            /* printf("--------- %d -- np: %d\n", t, np); */
+            int h=(total.heart_rate == 0) ? 0 : total.heart_rate/np;
+            int c=(total.cadence == 0) ? 0 : total.cadence/np;
+#endif
+            switch (conf->encode_method) {
+            case EXT_ENC:
+              gchart_e_encode(t - min_time, max->time - min_time, str);
+              encoded_strings->time_len +=
+                sprintf(encoded_strings->time + encoded_strings->time_len, "%s", str);
+
+              gchart_e_encode(d, max->distance, str);
+              encoded_strings->distance_len +=
+                sprintf(encoded_strings->distance + encoded_strings->distance_len, "%s", str);
+
+              gchart_e_encode(a, max->alt, str);
+              encoded_strings->alt_len +=
+                sprintf(encoded_strings->alt + encoded_strings->alt_len, "%s", str);
+              break;
+            case TXT_ENC:
+              /* printf("-- Encoding time: %d (%d) of %d (%d)\n", t, t-min_time, max->time, max->time - min_time); */
+              encoded_strings->time_len +=
+                sprintf(encoded_strings->time + encoded_strings->time_len, "%.1f,",
+                        gchart_t_encode(t- min_time, max->time - min_time));
+
+              encoded_strings->distance_len +=
+                sprintf(encoded_strings->distance + encoded_strings->distance_len, "%.1f,",
+                        gchart_t_encode(d, max->distance));
+
+              encoded_strings->alt_len +=
+                sprintf(encoded_strings->alt + encoded_strings->alt_len, "%.1f,",
+                        gchart_t_encode(a, max->alt));
+              break;
         default:
           break;
-	    }
-	    
-	    /* printf(" = %.1d\n", d); */
-	    /* printf("summarizing: "); */
-	    total.time = 0;
-	    total.distance = 0;
-	    total.alt = 0;
-	    total.heart_rate = 0;
-	    total.cadence = 0;
-	    j=0;
-	  }
-	  /* printf("%.1f, ", d304->distance); */
-	  
-	  i++;
-	}
+            }
+
+            /* printf(" = %.1d\n", d); */
+            /* printf("summarizing: "); */
+            total.time = 0;
+            total.distance = 0;
+            total.alt = 0;
+            total.heart_rate = 0;
+            total.cadence = 0;
+            j=0;
+          }
+          /* printf("%.1f, ", d304->distance); */
+
+          i++;
+        }
       }
       if (conf->encode_method == TXT_ENC) {
-	/* Remove the trailing commas */
-	encoded_strings->time[encoded_strings->time_len - 1]='\0';
-	encoded_strings->distance[encoded_strings->distance_len - 1]='\0';
-	encoded_strings->alt[encoded_strings->alt_len - 1]='\0';
+        /* Remove the trailing commas */
+        encoded_strings->time[encoded_strings->time_len - 1]='\0';
+        encoded_strings->distance[encoded_strings->distance_len - 1]='\0';
+        encoded_strings->alt[encoded_strings->alt_len - 1]='\0';
 #if 0
-	encoded_strings->heart_rate[encoded_strings->heart_rate_len - 1]='\0';
-	encoded_strings->cadence[encoded_strings->cadence_len - 1]='\0';
+        encoded_strings->heart_rate[encoded_strings->heart_rate_len - 1]='\0';
+        encoded_strings->cadence[encoded_strings->cadence_len - 1]='\0';
 #endif
       }
       ok = 1;
@@ -265,9 +265,9 @@ get_gchart_data ( garmin_data *  data,
 
 static void
 print_gchart_data ( garmin_data *  data,
-		    FILE *         fp,
-		    gchart_conf *  conf,
-		    int            spaces )
+                    FILE *         fp,
+                    gchart_conf *  conf,
+                    int            spaces )
 {
   D304 max;
   uint32 min_time=999999999;

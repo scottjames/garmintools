@@ -1,17 +1,17 @@
 /*
   Garmintools software package
   Copyright (C) 2006-2008 Dave Bailey
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -75,7 +75,7 @@ check_for_kernel_module (void)
 static bool check_for_kernel_module (void) { return false; };
 #endif
 
-/* 
+/*
    Open the USB connection with the first Garmin device we find.  Eventually,
    I'd like to add the ability to select a particular device.  Returns 1 on
    success, 0 on failure.  Prints diagnostic information and errors to stdout.
@@ -106,7 +106,7 @@ garmin_open ( garmin_unit * garmin )
       }
     }
     cnt = libusb_get_device_list(ctx,&dl);
-    
+
     for (i = 0; i < cnt; ++i) {
         struct libusb_device_descriptor descriptor;
         struct libusb_config_descriptor *config = NULL;
@@ -118,40 +118,40 @@ garmin_open ( garmin_unit * garmin )
              descriptor.idVendor  == GARMIN_USB_VID &&
              descriptor.idProduct == GARMIN_USB_PID ) {
 
-	  if ( garmin->verbose != 0 ) {
-	    printf("[garmin] found VID %04x, PID %04x",
-		   descriptor.idVendor,
-		   descriptor.idProduct);
-	  }
+          if ( garmin->verbose != 0 ) {
+            printf("[garmin] found VID %04x, PID %04x",
+                   descriptor.idVendor,
+                   descriptor.idProduct);
+          }
 
-	  err = libusb_open(di,&garmin->usb.handle);
-	  garmin->usb.read_bulk = 0;
+          err = libusb_open(di,&garmin->usb.handle);
+          garmin->usb.read_bulk = 0;
 
-	  if ( err ) {
-	    printf("libusb_open failed: %s\n",libusb_error_name(err));
+          if ( err ) {
+            printf("libusb_open failed: %s\n",libusb_error_name(err));
             garmin->usb.handle = NULL;
-	  } else {
-	      if ( garmin->verbose != 0 ) {
+          } else {
+              if ( garmin->verbose != 0 ) {
                 printf("[garmin] libusb_open = %p\n",garmin->usb.handle);
-	      }
+              }
 
             err = libusb_set_configuration(garmin->usb.handle,1);
             if ( err ) {
               printf("libusb_set_configuration failed: %s\n",
                      libusb_error_name(err));
             } else {
-		if ( garmin->verbose != 0 ) {
-	              printf("[garmin] libusb_set_configuration[1] succeeded\n");
-		}
+                if ( garmin->verbose != 0 ) {
+                      printf("[garmin] libusb_set_configuration[1] succeeded\n");
+                }
 
               err = libusb_claim_interface(garmin->usb.handle,0);
               if ( err ) {
                 printf("libusb_claim_interface failed: %s\n",
                        libusb_error_name(err));
               } else {
-		if ( garmin->verbose != 0 ) {
+                if ( garmin->verbose != 0 ) {
                      printf("[garmin] libusb_claim_interface[0] succeeded\n");
-		}
+                }
 
                 err = libusb_get_config_descriptor_by_value(di,1,&config);
                 if ( err ) {
@@ -165,62 +165,62 @@ garmin_open ( garmin_unit * garmin )
             }
           }
 
-	  if ( !err ) {
+          if ( !err ) {
 
-	    /* 
-	       We've succeeded in opening and claiming the interface 
-	       Let's set the bulk and interrupt in and out endpoints. 
-	    */
+            /*
+               We've succeeded in opening and claiming the interface
+               Let's set the bulk and interrupt in and out endpoints.
+            */
 
-	    for ( i = 0; 
-		  i < config->interface->altsetting->bNumEndpoints;
-		  i++ ) {
-	      const struct libusb_endpoint_descriptor * ep;
-	      
-	      ep = &config->interface->altsetting->endpoint[i];
-	      switch ( ep->bmAttributes & LIBUSB_TRANSFER_TYPE_MASK ) {
-	      case LIBUSB_TRANSFER_TYPE_BULK:
-		if ( ep->bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK ) {
-		  garmin->usb.bulk_in = ep->bEndpointAddress;
-		  if ( garmin->verbose != 0 ) {
-		    printf("[garmin] bulk IN  = 0x%02x\n",garmin->usb.bulk_in);
-		  }
-		} else {
-		  garmin->usb.bulk_out = ep->bEndpointAddress;
-		  if ( garmin->verbose != 0 ) {
-		    printf("[garmin] bulk OUT = 0x%02x\n",garmin->usb.bulk_out);
-		  }
-		}
-		break;
-	      case LIBUSB_TRANSFER_TYPE_INTERRUPT:
-		if ( ep->bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK ) {
-		  garmin->usb.intr_in = ep->bEndpointAddress;
-		  if ( garmin->verbose != 0 ) {
-		    printf("[garmin] intr IN  = 0x%02x\n",garmin->usb.intr_in);
-		  }
-		}
-		break;
-	      default:
-		break;
-	      }
-	    }
-	  }
+            for ( i = 0;
+                  i < config->interface->altsetting->bNumEndpoints;
+                  i++ ) {
+              const struct libusb_endpoint_descriptor * ep;
+
+              ep = &config->interface->altsetting->endpoint[i];
+              switch ( ep->bmAttributes & LIBUSB_TRANSFER_TYPE_MASK ) {
+              case LIBUSB_TRANSFER_TYPE_BULK:
+                if ( ep->bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK ) {
+                  garmin->usb.bulk_in = ep->bEndpointAddress;
+                  if ( garmin->verbose != 0 ) {
+                    printf("[garmin] bulk IN  = 0x%02x\n",garmin->usb.bulk_in);
+                  }
+                } else {
+                  garmin->usb.bulk_out = ep->bEndpointAddress;
+                  if ( garmin->verbose != 0 ) {
+                    printf("[garmin] bulk OUT = 0x%02x\n",garmin->usb.bulk_out);
+                  }
+                }
+                break;
+              case LIBUSB_TRANSFER_TYPE_INTERRUPT:
+                if ( ep->bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK ) {
+                  garmin->usb.intr_in = ep->bEndpointAddress;
+                  if ( garmin->verbose != 0 ) {
+                    printf("[garmin] intr IN  = 0x%02x\n",garmin->usb.intr_in);
+                  }
+                }
+                break;
+              default:
+                break;
+              }
+            }
+          }
 
       if (config != NULL) {
           libusb_free_config_descriptor (config);
       }
 
-	  /* We've found what should be the Garmin interface. */
+          /* We've found what should be the Garmin interface. */
 
-	  break;
-	}
+          break;
+        }
 
       if ( garmin->usb.handle != NULL ) break;
     }
     libusb_free_device_list (dl, 1);
   }
 
-  /* 
+  /*
      If the USB handle is open but we experienced an error in setting the
      configuration or claiming the interface, close the USB handle and set
      it to NULL.
@@ -268,9 +268,9 @@ garmin_packet_data ( garmin_packet * p )
 
 int
 garmin_packetize ( garmin_packet *  p,
-		   uint16           id, 
-		   uint32           size, 
-		   uint8 *          data )
+                   uint16           id,
+                   uint32           size,
+                   uint8 *          data )
 {
   int ok = 0;
 
@@ -312,19 +312,19 @@ garmin_read ( garmin_unit * garmin, garmin_packet * p )
                                 sizeof(garmin_packet),
                                 &r,
                                 INTR_TIMEOUT);
-      /* 
-	 If the packet is a "Pid_Data_Available" packet, we need to read
-	 from the bulk endpoint until we get an empty packet.
+      /*
+         If the packet is a "Pid_Data_Available" packet, we need to read
+         from the bulk endpoint until we get an empty packet.
       */
-      
+
       if ( garmin_packet_type(p) == GARMIN_PROTOCOL_USB &&
-	   garmin_packet_id(p) == Pid_Data_Available ) {
-	
-	/* FIXME!!! */
-	
-	printf("Received a Pid_Data_Available from the unit!\n");
+           garmin_packet_id(p) == Pid_Data_Available ) {
+
+        /* FIXME!!! */
+
+        printf("Received a Pid_Data_Available from the unit!\n");
       }
-      
+
     } else {
       libusb_bulk_transfer(garmin->usb.handle,
                            garmin->usb.bulk_in,
@@ -369,7 +369,7 @@ garmin_write ( garmin_unit * garmin, garmin_packet * p )
       exit(1);
     }
   }
-  
+
   return r;
 }
 
@@ -391,7 +391,7 @@ garmin_start_session ( garmin_unit * garmin )
   } else {
     garmin->id = 0;
   }
-  
+
   return garmin->id;
 }
 
@@ -414,21 +414,21 @@ garmin_print_packet ( garmin_packet * p, int dir, FILE * fp )
   }
 
   fprintf(fp," type=\"0x%02x\" id=\"0x%04x\" size=\"%u\"",
-	  garmin_packet_type(p),garmin_packet_id(p),s);
+          garmin_packet_type(p),garmin_packet_id(p),s);
   if ( s > 0 ) {
     fprintf(fp,">\n");
     for ( i = 0, j = 0; i < s; i++ ) {
       sprintf(&hex[(3*(i&0x0f))]," %02x",p->packet.data[i]);
       sprintf(&dec[(i&0x0f)],"%c",
-	      (isalnum(p->packet.data[i]) || 
-	       ispunct(p->packet.data[i]) ||
-	       p->packet.data[i] == ' ') ?
-	      p->packet.data[i] : '_');
+              (isalnum(p->packet.data[i]) ||
+               ispunct(p->packet.data[i]) ||
+               p->packet.data[i] == ' ') ?
+              p->packet.data[i] : '_');
       if ( (i & 0x0f) == 0x0f ) {
-	j = 0;
-	fprintf(fp,"[%04x] %-54s %s\n",i-15,hex,dec);
+        j = 0;
+        fprintf(fp,"[%04x] %-54s %s\n",i-15,hex,dec);
       } else {
-	j++;
+        j++;
       }
     }
     if ( j > 0 ) {

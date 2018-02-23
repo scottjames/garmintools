@@ -1,17 +1,17 @@
 /*
   Garmintools software package
   Copyright (C) 2006-2008 Dave Bailey
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -30,7 +30,7 @@ garmin_lpid ( link_protocol link, garmin_pid gpid )
 
   switch ( link ) {
   case link_L001:
-    switch ( gpid ) { 
+    switch ( gpid ) {
     case Pid_Protocol_Array:       lpid = L000_Pid_Protocol_Array;       break;
     case Pid_Product_Rqst:         lpid = L000_Pid_Product_Rqst;         break;
     case Pid_Product_Data:         lpid = L000_Pid_Product_Data;         break;
@@ -102,7 +102,7 @@ garmin_gpid ( link_protocol link, uint16 lpid )
 
   switch ( link ) {
   case link_L001:
-    switch ( lpid ) { 
+    switch ( lpid ) {
     case L000_Pid_Protocol_Array:       gpid = Pid_Protocol_Array;       break;
     case L000_Pid_Product_Rqst:         gpid = Pid_Product_Rqst;         break;
     case L000_Pid_Product_Data:         gpid = Pid_Product_Data;         break;

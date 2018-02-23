@@ -1,17 +1,17 @@
 /*
   Garmintools software package
   Copyright (C) 2006-2008 Dave Bailey
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -21,14 +21,14 @@
 #include "garmin.h"
 
 
-/* 
+/*
    Check to see whether a command is supported by a Garmin unit based on its
    available command protocols.
 */
 
 int
 garmin_command_supported ( garmin_unit *    garmin,
-			   garmin_command   cmd )
+                           garmin_command   cmd )
 {
   int ret = 0;
 
@@ -123,7 +123,7 @@ garmin_command_supported ( garmin_unit *    garmin,
     ret = garmin->protocol.course.limits;
     break;
 
-  default: 
+  default:
     break;
   }
 
@@ -131,15 +131,15 @@ garmin_command_supported ( garmin_unit *    garmin,
 }
 
 
-/* 
+/*
    Convert a garmin_command to a command packet, returning 1 if the command
    is supported by the unit's command protocol and 0 if it isn't.
 */
 
 int
-garmin_make_command_packet ( garmin_unit *    garmin, 
-			     garmin_command   cmd,
-			     garmin_packet *  packet )
+garmin_make_command_packet ( garmin_unit *    garmin,
+                             garmin_command   cmd,
+                             garmin_packet *  packet )
 {
   int    r = 1;
   uint16 c = 0;
@@ -154,7 +154,7 @@ garmin_make_command_packet ( garmin_unit *    garmin,
   default:                  r = 0;                                       break;
   }
 
-  /* 
+  /*
      Although it's obvious from the spec that L001 implies A010 and L002
      implies A011, this relationship is not explicit.  We have to determine
      the command ID based on the unit's stated command protocol.
@@ -210,7 +210,7 @@ garmin_make_command_packet ( garmin_unit *    garmin,
     CMD_DEFAULT;
   }
 
-  /* 
+  /*
      If the command is supported by the unit's command protocol, build the
      packet.
   */
@@ -219,7 +219,7 @@ garmin_make_command_packet ( garmin_unit *    garmin,
     put_uint16(b,c);
     garmin_packetize(packet,p,2,b);
   }
-  
+
   return r;
 }
 

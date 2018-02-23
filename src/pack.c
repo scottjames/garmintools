@@ -1,17 +1,17 @@
 /*
   Garmintools software package
   Copyright (C) 2006-2008 Dave Bailey
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -43,7 +43,7 @@
 #define PUTSTR(x)                                                         \
   do {                                                                    \
     memcpy(*pos,x,sizeof(x)-1);                                           \
-    (*pos)[sizeof(x)-1] = 0;	                                          \
+    (*pos)[sizeof(x)-1] = 0;                                                  \
     *pos += sizeof(x);                                                    \
   } while ( 0 )
 
@@ -379,7 +379,7 @@ garmin_pack_d155 ( D155 * wpt, uint8 ** pos )
   PUTSTR(wpt->cc);
   SKIP(1);
   PUTU8(wpt->wpt_class);
-  PUTU16(wpt->smbl);  
+  PUTU16(wpt->smbl);
   PUTU8(wpt->dspl);
 }
 
@@ -450,7 +450,7 @@ garmin_pack_d300 ( D300 * point, uint8 ** pos )
 
 static void
 garmin_pack_d301 ( D301 * point, uint8 ** pos )
-{ 
+{
   PUTPOS(point->posn);
   PUTU32(point->time);
   PUTF32(point->alt);
@@ -1092,23 +1092,23 @@ mkpath ( const char *path )
   gid_t       group = -1;
   int         already = 0;
   mode_t      mode = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
-  
+
   /* check for obvious errors */
 
   if ( !path || *path != '/' ) return 0;
 
-  /* 
-     if the path already exists, return 1 if it is a directory and 0 
-     otherwise 
+  /*
+     if the path already exists, return 1 if it is a directory and 0
+     otherwise
   */
-  
+
   if ( stat(path,&sb) != -1 ) {
     return (S_ISDIR(sb.st_mode)) ? 1 : 0;
   }
 
-  /* 
-     loop through the path, stopping at each slash to try and make the 
-     directory. 
+  /*
+     loop through the path, stopping at each slash to try and make the
+     directory.
   */
 
   while ( path[n] ) {
@@ -1116,35 +1116,35 @@ mkpath ( const char *path )
     if ( path[n] == '/' ) {
       rpath[j] = 0;
       if ( stat(rpath,&sb) != -1 ) {  /* this part already exists */
-	if ( !S_ISDIR(sb.st_mode) ) { /* but is not a directory!  */
-	  fprintf(stderr,"mkpath: %s exists but is not a directory",rpath);
-	  ok = 0;
-	  break;
-	} else {
-	  
-	  /* figure out who owns the directory, what permissions they have */
+        if ( !S_ISDIR(sb.st_mode) ) { /* but is not a directory!  */
+          fprintf(stderr,"mkpath: %s exists but is not a directory",rpath);
+          ok = 0;
+          break;
+        } else {
 
-	  owner   = sb.st_uid;
-	  group   = sb.st_gid;
-	  mode    = sb.st_mode;
-	  already = 1;
-	}
+          /* figure out who owns the directory, what permissions they have */
+
+          owner   = sb.st_uid;
+          group   = sb.st_gid;
+          mode    = sb.st_mode;
+          already = 1;
+        }
       } else {
-	if ( mkdir(rpath,mode) != -1 ) {   /* have to make this part */
-	  if ( already ) {
-	    if (chown(rpath,owner,group) < 0) {
+        if ( mkdir(rpath,mode) != -1 ) {   /* have to make this part */
+          if ( already ) {
+            if (chown(rpath,owner,group) < 0) {
             fprintf(stderr, "failed to chown %s : %m\n", path);
         }
-	  }
-	} else {
-	  fprintf(stderr,"mkpath: mkdir(%s,%o): %s",path,mode,strerror(errno));
-	  ok = 0;
-	  break;
-	}
+          }
+        } else {
+          fprintf(stderr,"mkpath: mkdir(%s,%o): %s",path,mode,strerror(errno));
+          ok = 0;
+          break;
+        }
       }
     }
   }
-  
+
   /* make the final path */
 
   if ( mkdir(path,mode) != -1 ) {
@@ -1205,37 +1205,37 @@ garmin_save ( garmin_data * data, const char * filename, const char * dir )
 
       if ( (buf = calloc(bytes + GARMIN_HEADER, sizeof(uint8))) != NULL ) {
 
-	/* write GARMIN_MAGIC, GARMIN_VERSION, and bytes. */
+        /* write GARMIN_MAGIC, GARMIN_VERSION, and bytes. */
 
-	pos = buf;
-	memset(pos,0,GARMIN_HEADER);
-	strncpy((char *)pos,GARMIN_MAGIC,11);
-	put_uint32(pos+12,GARMIN_VERSION);
-	marker = pos+16;
-	pos += GARMIN_HEADER;
-	packed = GARMIN_HEADER;
+        pos = buf;
+        memset(pos,0,GARMIN_HEADER);
+        strncpy((char *)pos,GARMIN_MAGIC,11);
+        put_uint32(pos+12,GARMIN_VERSION);
+        marker = pos+16;
+        pos += GARMIN_HEADER;
+        packed = GARMIN_HEADER;
 
-	/* pack the rest of the data. */
-	
-	packed += garmin_pack(data,&pos);
-	put_uint32(marker,packed-GARMIN_HEADER);
+        /* pack the rest of the data. */
 
-	/* Now write the data to the file and close the file. */
+        packed += garmin_pack(data,&pos);
+        put_uint32(marker,packed-GARMIN_HEADER);
 
-	if ( (wrote = write(fd,buf,packed)) != packed ) {
-	  /* write error! */
-	  printf("write of %d bytes returned %d: %s\n",
-		 packed,wrote,strerror(errno));
-	}
-	close(fd);
+        /* Now write the data to the file and close the file. */
 
-	/* Free the buffer. */
-	
-	free(buf);
+        if ( (wrote = write(fd,buf,packed)) != packed ) {
+          /* write error! */
+          printf("write of %d bytes returned %d: %s\n",
+                 packed,wrote,strerror(errno));
+        }
+        close(fd);
+
+        /* Free the buffer. */
+
+        free(buf);
 
       } else {
-	/* malloc error */
-	printf("malloc(%d): %s\n",bytes + GARMIN_HEADER, strerror(errno));
+        /* malloc error */
+        printf("malloc(%d): %s\n",bytes + GARMIN_HEADER, strerror(errno));
       }
     } else {
       /* problem creating file. */
@@ -1286,7 +1286,7 @@ garmin_pack ( garmin_data * data, uint8 ** buf )
       bytes += 8;                           \
     }                                       \
     break
-					   
+
   switch ( data->type ) {
   CASE_DATA(list);
   CASE_DATA(100);
