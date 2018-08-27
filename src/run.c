@@ -23,6 +23,10 @@
 #include <time.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/stat.h>
+
+#include <inttypes.h>
+
 #include "garmin.h"
 
 
@@ -177,6 +181,45 @@ get_track ( garmin_list * points, uint32 trk_index )
   return track;
 }
 
+static void
+tcx_device_info(garmin_unit *unit, FILE *fp)
+{
+    garmin_product *product = &(unit->product);
+    fprintf(fp, "<Creator xsi:type=\"Device_t\">"
+                  "<Name>%s</Name>"
+                  "<UnitId>%"PRIuLEAST32"</UnitId>"
+                  "<ProductID>%"PRIuLEAST16"</ProductID>"
+                  "<Version>"
+                    "<VersionMajor>%d</VersionMajor>"
+                    "<VersionMinor>%d</VersionMinor>"
+                    "<BuildMajor>0</BuildMajor>"
+                    "<BuildMinor>0</BuildMinor>"
+                  "</Version>"
+                "</Creator>\n",
+            product->product_description,
+            unit->id,
+            product->product_id,
+            product->software_version / 100,
+            product->software_version % 100);
+}
+
+static void
+save_device_info(garmin_unit *unit, const char *filepath, const char *filename)
+{
+  char path[BUFSIZ] = { 0 };
+  struct stat sb = { 0 };
+
+  snprintf(path, sizeof(path) - 1, "%s/%s.device", filepath, filename);
+  if (stat(path, &sb) != -1) {
+    return;
+  }
+
+  FILE *f = fopen(path, "w");
+  if (f != NULL) {
+    tcx_device_info(unit, f);
+    fclose(f);
+  }
+}
 
 void
 garmin_save_runs ( garmin_unit * garmin)
@@ -310,6 +353,7 @@ garmin_save_runs ( garmin_unit * garmin)
 
             if ( garmin_save(rlist,filename,filepath) != 0 ) {
               printf("Wrote:   %s/%s\n",filepath,filename);
+              save_device_info(garmin, filepath, filename);
             } else {
               printf("Skipped: %s/%s\n",filepath,filename);
             }
