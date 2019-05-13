@@ -10,9 +10,9 @@ install:
   - sudo apt install python3
   - sudo apt install python3-pip
   - sudo apt install python3-setuptools
+  - sudo apt install libusb-1.0-0-dev
   - pip3 install meson
 
 script:
   - meson builddir
   - ninja -C builddir
-
