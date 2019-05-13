@@ -1,4 +1,4 @@
-project('garmintools', ['c'], version : '0.10.0')
+project('garmintools', ['c'], version : '0.12.0')
 
 cc = meson.get_compiler('c')
 

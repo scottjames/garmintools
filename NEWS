@@ -1,2 +1,19 @@
+0.12.0 - May 13th, 2019
+=======================
+
+ * Add several patches from bug tracker and downstream
+ * Clean-up generated files from git
+ * Fix lots of memory issues such as leaks, uninitalized areas and
+   wrong free
+ * General code clean-up
+   * remove unnecessary free guards
+   * use stdint instead of custom int defines
+ * On linux, add runtime check for garmin_gps module
+ * Get rid of multiple compiler warnings
+ * Fix findings from scan-build
+ * Add meson build support
+ * Add garmin_tcx tool for generating data suitable to upload to Garmin Connect
+   or Strava
+
 Initial implementation begun on 30 December 2006
 
