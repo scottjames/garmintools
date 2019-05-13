@@ -43,7 +43,7 @@ print_dtime ( uint32 t, FILE * fp )
   */
 
   tval = t + TIME_OFFSET;
-  localtime_r(&tval,&tmval);
+  gmtime_r(&tval,&tmval);
   strftime(buf,sizeof(buf)-1,"%FT%T%z",&tmval);
 
   /*
