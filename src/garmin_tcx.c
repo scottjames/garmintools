@@ -178,6 +178,8 @@ print_tcx_data(garmin_data *data, char *device_information, FILE *fn, int spaces
       d = garmin_list_data(data, 1);
       if (d == NULL || d->type != data_Dlist) {
           fprintf(stderr, "No laps, exiting\n");
+
+          return;
       }
       garmin_list *laps = d->data;
 
