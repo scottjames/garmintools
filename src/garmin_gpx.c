@@ -87,6 +87,7 @@ get_gpx_data ( garmin_data *    fulldata,
     if ( data == NULL ) {
 
       printf("get_gpx_data: no track points found\n");
+      free(*tracks);
 
     } else if ( data->type == data_Dlist ) {
 
