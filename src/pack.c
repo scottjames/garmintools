@@ -1169,7 +1169,7 @@ mkpath ( const char *path )
 uint32
 garmin_save ( garmin_data * data, const char * filename, const char * dir )
 {
-  int         fd;
+  int         fd = -1;
   uint8 *     buf;
   uint8 *     pos;
   uint8 *     marker;
@@ -1228,6 +1228,7 @@ garmin_save ( garmin_data * data, const char * filename, const char * dir )
                  packed,wrote,strerror(errno));
         }
         close(fd);
+        fd = -1;
 
         /* Free the buffer. */
 
@@ -1245,6 +1246,9 @@ garmin_save ( garmin_data * data, const char * filename, const char * dir )
     /* don't write empty data */
     printf("%s: garmin_data_size was 0\n",path);
   }
+
+  if (fd >= 0)
+    close(fd);
 
   return bytes;
 }
