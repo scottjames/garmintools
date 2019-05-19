@@ -26,6 +26,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <time.h>
 
 static void
 print_dtime ( uint32 t, FILE * fp )
