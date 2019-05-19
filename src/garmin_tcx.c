@@ -157,12 +157,6 @@ print_lap(FILE *fn, garmin_data *lap_data, uint32_t end, garmin_list *points)
 static void
 print_tcx_data(garmin_data *data, char *device_information, FILE *fn, int spaces)
 {
-  //route_point **         laps = NULL;
-  //route_point * points;
-  //position_type  sw;
-  //position_type  ne;
-  //int i;
-
   {
       print_tcx_header(fn);
       fprintf(fn, "  <Activities>\n");
