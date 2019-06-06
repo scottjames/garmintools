@@ -17,13 +17,15 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include "garmin.h"
+
+#include <getopt.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "garmin.h"
-
 
 #define BBOX_NW  0
 #define BBOX_NE  1
@@ -340,12 +342,59 @@ print_gpx_data ( garmin_data * data, FILE * fp, int spaces )
   free(laps);
 }
 
+static int verbose = 0;
+
+static void
+print_usage(const char *name)
+{
+  fprintf(stderr, "Usage: %s [OPTIONS] FILE ...\n", name);
+  fprintf(
+    stderr,
+    "\nWrite GPX file suitable for uploading to other devices or services\n");
+  fprintf(stderr, "  -h, --help    Provide help\n");
+  fprintf(stderr, "  -v, --verbose Be more verbose\n");
+}
 
 int
 main ( int argc, char ** argv )
 {
   garmin_data * data;
   int           i;
+
+  static struct option options[] = {{"help", no_argument, 0, 'h'},
+                                    {"verbose", no_argument, &verbose, 1},
+                                    {0, 0, 0, 0}};
+
+  while (true) {
+    int option_index = -1;
+    int c            = getopt_long(argc, argv, "hv", options, &option_index);
+    if (c == -1)
+      break;
+
+    switch (c) {
+    case 0:
+      if (options[option_index].flag != 0) {
+        break;
+      }
+      break;
+    case 'v':
+      verbose = 1;
+      break;
+    default:
+      print_usage(argv[0]);
+      exit(c == 'h' ? EXIT_SUCCESS : EXIT_FAILURE);
+    }
+  }
+
+  if (argc < 2) {
+    print_usage(argv[0]);
+    exit(EXIT_FAILURE);
+  }
+
+  if (strcmp(argv[1], "help") == 0) {
+    print_usage(argv[0]);
+    exit(EXIT_SUCCESS);
+  }
 
   for ( i = 1; i < argc; i++ ) {
     if ( (data = garmin_load(argv[i])) != NULL ) {

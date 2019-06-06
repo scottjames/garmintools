@@ -21,16 +21,60 @@
 #include <unistd.h>
 #include "garmin.h"
 
+#include <getopt.h>
+#include <stdlib.h>
+#include <string.h>
+
+static int verbose = 0;
+
+void
+print_usage(const char *name)
+{
+  fprintf(stderr, "Usage : %s [OPTIONS]\n", name);
+  fprintf(stderr, "\nDownload excercise information from the device\n");
+  fprintf(stderr, "  -h, --help    Provide help\n");
+  fprintf(stderr, "  -v, --verbose Be more verbose\n");
+}
 
 int
 main ( int argc, char ** argv )
 {
   garmin_unit garmin;
-  int         verbose;
 
-  /* Set the verbosity if the -v option was provided. */
+  static struct option options[] = {{"help", no_argument, 0, 'h'},
+                                    {"verbose", no_argument, &verbose, 1},
+                                    {0, 0, 0, 0}};
 
-  verbose = (getopt(argc,argv,"v") != -1);
+  while (true) {
+    int option_index = -1;
+    int c            = getopt_long(argc, argv, "hv", options, &option_index);
+    if (c == -1)
+      break;
+
+    switch (c) {
+    case 0:
+      if (options[option_index].flag != 0) {
+        break;
+      }
+      break;
+    case 'v':
+      verbose = 1;
+      break;
+    default:
+      print_usage(argv[0]);
+      exit(c == 'h' ? EXIT_SUCCESS : EXIT_FAILURE);
+    }
+  }
+
+  if (argc < 2) {
+    print_usage(argv[0]);
+    exit(EXIT_FAILURE);
+  }
+
+  if (strcmp(argv[1], "help") == 0) {
+    print_usage(argv[0]);
+    exit(EXIT_SUCCESS);
+  }
 
   if ( garmin_init(&garmin,verbose) != 0 ) {
     /* Read and save the runs. */

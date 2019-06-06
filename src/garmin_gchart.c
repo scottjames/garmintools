@@ -5,6 +5,9 @@
 #include <string.h>
 #include "garmin.h"
 
+#include <getopt.h>
+#include <stdbool.h>
+
 /* Constants */
 #define SIMP_ENC 's'
 #define EXT_ENC  'e'
@@ -307,45 +310,23 @@ print_gchart_data ( garmin_data *  data,
   }
 }
 
+static int verbose = 0;
 
-static int 
-process_arguments ( int argc, char **argv, gchart_conf *conf )
+static void
+print_usage(const char *name)
 {
-  /* Get the arguments */
-  int i, arg_cnt = 0, size = argc;
-  char *good_args[size];
-    
-  for (i = 0; i < size; i++) {
-    /* Check if its a command */
-    if (strcmp(argv[i],"-w") == 0 || 
-	strcmp(argv[i],"--width") == 0) {
-      arg_cnt+=2; i++;
-      conf->width=atoi(argv[i]);
-    } else if (strcmp(argv[i],"-h") == 0 || 
-	       strcmp(argv[i],"--height") == 0) {
-      arg_cnt+=2; i++;
-      conf->height=atoi(argv[i]);
-    } else if (strcmp(argv[i],"-pdbp") == 0 || 
-	       strcmp(argv[i],"--pix-per-data-point") == 0) {
-      arg_cnt+=2; i++;
-      conf->pixperdp=(float32)atof(argv[i]);
-    } else if (strcmp(argv[i],"-enc") == 0 || 
-	       strcmp(argv[i],"--encode_method") == 0) {
-      arg_cnt+=2; i++;
-      conf->encode_method=argv[i][0];
-    } else {
-      /* fprintf(stderr, "WARNING: Unrecognized argument: %s\n", argv[i]); */
-      good_args[i - arg_cnt] = argv[i];
-    }
-  }
-
-  /* Move filenames up */
-  for (i = 0; i < size - arg_cnt; i++)
-    argv[i] = good_args[i];
-
-  return (size - arg_cnt);
+  fprintf(stderr, "Usage: %s [OPTIONS] FILE ...\n", name);
+  fprintf(stderr,
+          "  -w, --width=WIDTH            Width of the graph\n"
+          "  -h, --height=HEIGHT          Height of the graph\n"
+          "  -p, --pix-per-data-point=PIX Pixels per datapoint\n"
+          "  -e, --encode-method=[e|t]    Value encoding method. (t)ext or "
+          "(e)xtended\n"
+          "\n"
+          "Legacy options:\n"
+          "  -pdbp is equivalent as --pix-per-data-point\n"
+          "  -enc is equivalent to --encode-method\n");
 }
-
 
 int
 main ( int argc, char ** argv )
@@ -361,9 +342,60 @@ main ( int argc, char ** argv )
   conf.encode_method=DEF_ENC_METHOD;
   conf.pixperdp=DEF_PIXPERDP;
 
-  argc = process_arguments(argc, argv, &conf);
+  static struct option options[] = {
+    {"width", required_argument, 0, 'w'},
+    {"height", required_argument, 0, 'h'},
+    {"pix-per-data-point", required_argument, 0, 'p'},
+    {"pdbp", required_argument, 0, 'p'},
+    {"encode-method", required_argument, 0, 'e'},
+    {"enc", required_argument, 0, 'e'},
+    {"help", no_argument, 0, '?'},
+    {"verbose", no_argument, &verbose, 'v'},
+    {0, 0, 0, 0},
+  };
 
-  for ( i = 1; i < argc; i++ ) {    
+  while (true) {
+    int c = getopt_long_only(argc, argv, "w:h:p:e:", options, NULL);
+    if (c == -1) {
+      break;
+    }
+
+    switch (c) {
+    case 'w':
+      conf.width = (int)strtoul(optarg, NULL, 10);
+      break;
+    case 'h':
+      conf.height = (int)strtoul(optarg, NULL, 10);
+      break;
+    case 'e':
+      conf.encode_method = optarg[0];
+      break;
+    case 'p':
+      conf.pixperdp = strtof(optarg, NULL);
+      break;
+    default:
+      print_usage(argv[0]);
+      exit(EXIT_FAILURE);
+    }
+  };
+
+  if (argc < 2) {
+    print_usage(argv[0]);
+    exit(EXIT_FAILURE);
+  }
+
+  if (strcmp(argv[1], "help") == 0) {
+    print_usage(argv[0]);
+    exit(EXIT_SUCCESS);
+  }
+
+  printf("Resolution: %dx%d\nEncoding method: %c\nPixel per dp: %f\n",
+         conf.width,
+         conf.height,
+         conf.encode_method,
+         conf.pixperdp);
+
+  for (i = optind; i < argc; i++) {
     if ( (data = garmin_load(argv[i])) != NULL ) {
       print_gchart_data(data,stdout,&conf);
       garmin_free_data(data);

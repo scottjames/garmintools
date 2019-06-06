@@ -17,20 +17,58 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <stdio.h>
-#include <unistd.h>
+#include "config.h"
 #include "garmin.h"
 
+#include <getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+static int verbose = 0;
+
+void
+print_usage(const char *name)
+{
+  fprintf(stderr, "Usage : %s [OPTIONS]", name);
+  fprintf(stderr, "\nShow information about the connected device\n");
+  fprintf(stderr, "  -h, --help    Provide help\n");
+  fprintf(stderr, "  -v, --verbose Be more verbose\n");
+}
 
 int
 main ( int argc, char ** argv )
 {
   garmin_unit   garmin;
-  int           verbose;
 
   /* Set the verbosity if the -v option was provided. */
 
-  verbose = (getopt(argc,argv,"v") != -1);
+  static struct option options[] = {{"help", no_argument, 0, 'h'},
+                                    {"verbose", no_argument, &verbose, 1},
+                                    {0, 0, 0, 0}};
+
+  while (true) {
+    int c = getopt_long(argc, argv, "hv", options, NULL);
+    if (c == -1)
+      break;
+
+    switch (c) {
+    case 0:
+      break;
+    case 'v':
+      verbose = 1;
+      break;
+    default:
+      print_usage(argv[0]);
+      exit(c == 'h' ? EXIT_SUCCESS : EXIT_FAILURE);
+    }
+  }
+
+  if (argc > 1 && (strcmp(argv[1], "help") == 0)) {
+    print_usage(argv[0]);
+    exit(EXIT_SUCCESS);
+  }
 
   if ( garmin_init(&garmin,verbose) != 0 ) {
     /* Now print the info. */
@@ -38,8 +76,9 @@ main ( int argc, char ** argv )
     garmin_close (&garmin);
     garmin_shutdown (&garmin);
   } else {
-    printf("garmin unit could not be opened!\n");
+    fprintf(stderr, "garmin unit could not be opened!\n");
+    return EXIT_FAILURE;
   }
 
-  return 0;
+  return EXIT_SUCCESS;
 }
