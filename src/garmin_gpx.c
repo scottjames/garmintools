@@ -88,6 +88,7 @@ get_gpx_data ( garmin_data *    fulldata,
 
       printf("get_gpx_data: no track points found\n");
       free(*tracks);
+      *tracks = NULL;
 
     } else if ( data->type == data_Dlist ) {
 
@@ -314,7 +315,7 @@ print_route_points ( route_point * points,
 static void
 print_gpx_data ( garmin_data * data, FILE * fp, int spaces )
 {
-  route_point **         laps = NULL;
+  route_point ** laps = NULL;
   route_point * points;
   position_type  sw;
   position_type  ne;
@@ -334,10 +335,9 @@ print_gpx_data ( garmin_data * data, FILE * fp, int spaces )
     }
     print_close_tag("trk",fp,spaces);
     print_close_tag("gpx",fp,spaces);
-
     free(laps[0]);
-    free(laps);
   }
+  free(laps);
 }
 
 
