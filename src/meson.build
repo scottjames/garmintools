@@ -28,7 +28,7 @@ libgarmintools = declare_dependency(link_with: lib,
 executable('garmin_save_runs', 'garmin_save_runs.c', dependencies: libgarmintools)
 executable('garmin_dump', 'garmin_dump.c', dependencies: libgarmintools)
 executable('garmin_get_info', 'garmin_get_info.c', dependencies: libgarmintools)
-executable('garmin_gmap', 'garmin_get_info.c', dependencies: [libgarmintools, math])
+executable('garmin_gmap', 'garmin_gmap.c', dependencies: [config, libgarmintools, math])
 executable('garmin_gchart', 'garmin_gchart.c', dependencies: [libgarmintools, math])
 executable('garmin_gpx', 'garmin_gpx.c', dependencies: [libgarmintools, math])
 executable('garmin_tcx', 'garmin_tcx.c', dependencies: [libgarmintools, math])
