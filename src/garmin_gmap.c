@@ -229,9 +229,9 @@ print_gmap_data ( garmin_data * data, FILE * fp, int spaces )
   char *         points = NULL;
   char *         levels = NULL;
   position_type  center;
-  position_type  start;
-  position_type  sw;
-  position_type  ne;
+  position_type  start = {0};
+  position_type  sw    = {0};
+  position_type  ne    = {0};
 
   if ( get_gmap_data(data,&points,&levels,&center,&start,&sw,&ne) != 0 ) {
 
