@@ -29,7 +29,7 @@
 
 static int verbose = 0;
 
-void
+static void
 print_usage(const char *name)
 {
   fprintf(stderr, "Usage : %s [OPTIONS] FILE ...\n", name);
@@ -39,7 +39,7 @@ print_usage(const char *name)
 }
 
 int
-main ( int argc, char ** argv )
+garmin_dump ( int argc, const char ** argv )
 {
   garmin_data * data;
   int           i;
@@ -50,7 +50,8 @@ main ( int argc, char ** argv )
 
   while (true) {
     int option_index = -1;
-    int c            = getopt_long(argc, argv, "hv", options, &option_index);
+    int c =
+      getopt_long(argc, (char *const *)argv, "hv", options, &option_index);
     if (c == -1)
       break;
 

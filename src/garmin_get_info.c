@@ -38,7 +38,7 @@ print_usage(const char *name)
 }
 
 int
-main ( int argc, char ** argv )
+garmin_info ( int argc, char ** argv )
 {
   garmin_unit   garmin;
 

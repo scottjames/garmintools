@@ -3,6 +3,7 @@ project('garmintools', ['c'], version : '0.13.0', default_options : ['c_std=gnu1
 cc = meson.get_compiler('c')
 
 config = configuration_data()
+config.set_quoted('GARMINTOOLS_VERSION_STRING', meson.project_version())
 if host_machine.endian() == 'big'
     config.set('WORDS_BIGENDIAN', '1')
 endif

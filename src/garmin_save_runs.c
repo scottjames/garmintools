@@ -27,7 +27,7 @@
 
 static int verbose = 0;
 
-void
+static void
 print_usage(const char *name)
 {
   fprintf(stderr, "Usage : %s [OPTIONS]\n", name);
@@ -37,7 +37,7 @@ print_usage(const char *name)
 }
 
 int
-main ( int argc, char ** argv )
+garmin_download(int argc, char **argv)
 {
   garmin_unit garmin;
 

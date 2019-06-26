@@ -25,10 +25,18 @@ libgarmintools = declare_dependency(link_with: lib,
                                     dependencies: usb)
 
 
-executable('garmin_save_runs', 'garmin_save_runs.c', dependencies: [config, libgarmintools])
-executable('garmin_dump', 'garmin_dump.c', dependencies: [config, libgarmintools])
-executable('garmin_get_info', 'garmin_get_info.c', dependencies: [config, libgarmintools])
-executable('garmin_gmap', 'garmin_gmap.c', dependencies: [config, libgarmintools, math])
-executable('garmin_gchart', 'garmin_gchart.c', dependencies: [config, libgarmintools, math])
-executable('garmin_gpx', 'garmin_gpx.c', dependencies: [config, libgarmintools, math])
-executable('garmin_tcx', 'garmin_tcx.c', dependencies: [config, libgarmintools, math])
+executable('garmintool',
+    files(
+        'garmintool.c',
+        'garmin_get_info.c',
+        'garmin_dump.c',
+        'garmin_save_runs.c',
+        'garmin_convert.c',
+        'garmin_tcx.c',
+        'garmin_gchart.c',
+        'garmin_gpx.c',
+        'garmin_gmap.c',
+    ),
+    dependencies: [config, libgarmintools, math],
+    install: true
+)

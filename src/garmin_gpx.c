@@ -342,8 +342,6 @@ print_gpx_data ( garmin_data * data, FILE * fp, int spaces )
   free(laps);
 }
 
-static int verbose = 0;
-
 static void
 print_usage(const char *name)
 {
@@ -356,43 +354,18 @@ print_usage(const char *name)
 }
 
 int
-main ( int argc, char ** argv )
+garmin_gpx(int argc, char **argv, const char *output_file, bool verbose)
 {
   garmin_data * data;
   int           i;
 
-  static struct option options[] = {{"help", no_argument, 0, 'h'},
-                                    {"verbose", no_argument, &verbose, 1},
-                                    {0, 0, 0, 0}};
-
-  while (true) {
-    int option_index = -1;
-    int c            = getopt_long(argc, argv, "hv", options, &option_index);
-    if (c == -1)
-      break;
-
-    switch (c) {
-    case 0:
-      if (options[option_index].flag != 0) {
-        break;
-      }
-      break;
-    case 'v':
-      verbose = 1;
-      break;
-    default:
-      print_usage(argv[0]);
-      exit(c == 'h' ? EXIT_SUCCESS : EXIT_FAILURE);
-    }
-  }
-
   if (argc < 2) {
-    print_usage(argv[0]);
+    print_usage("garmintool convert -f gpx");
     exit(EXIT_FAILURE);
   }
 
   if (strcmp(argv[1], "help") == 0) {
-    print_usage(argv[0]);
+    print_usage("garmintool convert -f gpx");
     exit(EXIT_SUCCESS);
   }
 

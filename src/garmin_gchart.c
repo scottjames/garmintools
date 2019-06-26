@@ -329,7 +329,7 @@ print_usage(const char *name)
 }
 
 int
-main ( int argc, char ** argv )
+garmin_gchart(int argc, char **argv)
 {
   int i=0;
   garmin_data * data;
@@ -354,6 +354,7 @@ main ( int argc, char ** argv )
     {0, 0, 0, 0},
   };
 
+  optind = 0;
   while (true) {
     int c = getopt_long_only(argc, argv, "w:h:p:e:", options, NULL);
     if (c == -1) {
@@ -372,6 +373,9 @@ main ( int argc, char ** argv )
       break;
     case 'p':
       conf.pixperdp = strtof(optarg, NULL);
+      break;
+    case '?':
+      printf(">>%c\n", optopt);
       break;
     default:
       print_usage(argv[0]);
