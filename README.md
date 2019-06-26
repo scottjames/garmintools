@@ -4,7 +4,7 @@ This software provides Linux users with the ability to communicate
 with the Garmin Forerunner 205 and Forerunner 305 via the USB
 interface.  While this is the only Garmin unit that I own, I did
 implement all of the documented Garmin protocols
-(http://www.garmin.com/support/pdf/IOSDK.zip) as of Rev C (May 19,
+(https://web.archive.org/web/20170627041709/http://www.garmin.com/support/pdf/IOSDK.zip) as of Rev C (May 19,
 2006) over the USB physical link.  This means that if you have a
 Garmin with a USB connection to a PC, you ought to be able to use this
 software to communicate with it.
