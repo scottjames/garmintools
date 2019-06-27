@@ -1,5 +1,5 @@
 pymod = import('python')
-python = pymod.find_installation('python2')
+python = pymod.find_installation('python2', required: false)
 pydep = dependency('python', required: false)
 
 if python.found() and get_option('python-module')
