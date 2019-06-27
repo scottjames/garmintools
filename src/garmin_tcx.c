@@ -155,7 +155,7 @@ print_lap(FILE *fn, garmin_data *lap_data, uint32_t end, garmin_list *points)
 }
 
 static void
-print_tcx_data(garmin_data *data, char *device_information, FILE *fn, int spaces)
+print_tcx_data(garmin_data *data, char *device_information, FILE *fn)
 {
   {
       print_tcx_header(fn);
@@ -246,7 +246,7 @@ main(int argc, char *argv[])
     for (int i = 1; i < argc; i++ ) {
         if ( (data = garmin_load(argv[i])) != NULL ) {
             char *device_info = read_device_file(argv[i]);
-            print_tcx_data(data,device_info, stdout,0);
+            print_tcx_data(data,device_info, stdout);
             free(device_info);
 
             garmin_free_data(data);

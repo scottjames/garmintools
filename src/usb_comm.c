@@ -132,7 +132,7 @@ garmin_open ( garmin_unit * garmin )
             garmin->usb.handle = NULL;
           } else {
               if ( garmin->verbose != 0 ) {
-                printf("[garmin] libusb_open = %p\n",garmin->usb.handle);
+                printf("[garmin] libusb_open = %p\n",(void*)garmin->usb.handle);
               }
 
             err = libusb_set_configuration(garmin->usb.handle,1);
@@ -228,7 +228,7 @@ garmin_open ( garmin_unit * garmin )
 
   if ( garmin->usb.handle != NULL && err != 0 ) {
     if ( garmin->verbose != 0 ) {
-      printf("[garmin] (err = %d) libusb_close(%p)\n",err,garmin->usb.handle);
+      printf("[garmin] (err = %d) libusb_close(%p)\n",err,(void *)garmin->usb.handle);
     }
     libusb_close(garmin->usb.handle);
     garmin->usb.handle = NULL;

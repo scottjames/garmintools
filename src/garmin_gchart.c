@@ -140,7 +140,6 @@ get_gchart_data ( garmin_data *  data,
                   D304 *         max,
                   int            datapoints_num,
                   d304strs*      encoded_strings,
-                  int            e_str_len,
                   int            min_time )
 {
   garmin_list *       dlist;
@@ -265,8 +264,7 @@ get_gchart_data ( garmin_data *  data,
 static void
 print_gchart_data ( garmin_data *  data,
                     FILE *         fp,
-                    gchart_conf *  conf,
-                    int            spaces )
+                    gchart_conf *  conf)
 {
   D304 max;
   uint32 min_time=999999999;
@@ -291,7 +289,7 @@ print_gchart_data ( garmin_data *  data,
     fprintf(fp, "-- min_t: %d\n", min_time);
   */
 
-  get_gchart_data(data, conf, &max, datapoints_num, &enc_strs, 1024, min_time);
+  get_gchart_data(data, conf, &max, datapoints_num, &enc_strs, min_time);
 
   /* Distance vs Alt */
   fprintf(fp, "http://chart.apis.google.com/chart?cht=lxy&chtt=Distance+vs.+Alt&chs=%dx%d&chd=", conf->width, conf->height);
@@ -367,7 +365,7 @@ main ( int argc, char ** argv )
 
   for ( i = 1; i < argc; i++ ) {    
     if ( (data = garmin_load(argv[i])) != NULL ) {
-      print_gchart_data(data,stdout,&conf,0);
+      print_gchart_data(data,stdout,&conf);
       garmin_free_data(data);
     }
   }
