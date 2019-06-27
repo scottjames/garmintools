@@ -1,5 +1,8 @@
 # GARMINTOOLS
 
+[![Build Status](https://travis-ci.com/phako/garmintools.svg?branch=master)](https://travis-ci.com/phako/garmintools)
+[![Build Status](https://api.cirrus-ci.com/github/phako/garmintools.svg)](https://cirrus-ci.com/github/phako/garmintools) 
+
 This software provides Linux users with the ability to communicate
 with the Garmin Forerunner 205 and Forerunner 305 via the USB
 interface.  While this is the only Garmin unit that I own, I did
