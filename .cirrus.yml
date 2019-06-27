@@ -5,5 +5,5 @@ task:
   install_script: pkg install -y
         meson ninja pkgconf python2
   script:
-      - meson build
-      - ninja -v -C build
+      - meson builddir --warnlevel 3 --buildtype release
+      - ninja -v -C builddir
