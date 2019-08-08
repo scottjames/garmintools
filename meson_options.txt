@@ -1,1 +1,2 @@
-option('python-module', type: 'boolean', value: false, description: 'Build the python module')
+option('python', type: 'boolean', value: false, description: 'Build the python module')
+option('python2', type: 'boolean', value: false, description: 'Build the legacy python module')
