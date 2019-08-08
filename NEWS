@@ -1,3 +1,18 @@
+0.12.1 - Aug 8th, 2019
+======================
+
+ * gpx: Fix several potential memory leaks
+ * tcx: Fix potential null-pointer dereference
+ * tcx: Add missing include
+ * tcx: Dead-code clean-up
+ * pack: Fix leaking a file descriptor
+ * gmap: Actually build it
+ * gmap: Initialize used data strcutures
+ * docs: Add manpage for garmin_tcx
+ * all: Fix several complier warnings
+ * python: Fix building when no python is available
+ * udev: Add rules for assigning "dialout" group (Forerunner 305)
+
 0.12.0 - May 13th, 2019
 =======================
 
