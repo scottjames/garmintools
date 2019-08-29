@@ -66,12 +66,7 @@ main ( int argc, char ** argv )
     }
   }
 
-  if (argc < 2) {
-    print_usage(argv[0]);
-    exit(EXIT_FAILURE);
-  }
-
-  if (strcmp(argv[1], "help") == 0) {
+  if (argc > 1 && strcmp(argv[1], "help") == 0) {
     print_usage(argv[0]);
     exit(EXIT_SUCCESS);
   }
