@@ -18,3 +18,5 @@ config = declare_dependency(include_directories : include_directories('.'))
 subdir('src')
 subdir('python')
 subdir('doc')
+
+meson.add_install_script('build-aux/meson/postinstall.py', get_option('bindir'))

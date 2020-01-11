@@ -20,8 +20,9 @@
 
 #include "config.h"
 
-#include <stdlib.h>
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Replace with proper gettext later
@@ -38,6 +39,14 @@ struct garmin_command_dispatch_t_ {
     const char *description;
 };
 typedef struct garmin_command_dispatch_t_ garmin_command_dispatch_t;
+
+// symlink compatibility mapper
+struct garmin_compat_t_ {
+  const char *name;
+  int         argc;
+  const char *argv[2];
+};
+typedef struct garmin_compat_t_ garmin_compat_t;
 
 //////////////////////////////////////
 // Function prototypes
@@ -64,6 +73,17 @@ static void
 print_usage();
 static int
 handle_command(int argc, char *argv[]);
+
+static garmin_compat_t compat[] = {
+  {"garmin_save_runs", 1, {"download", NULL}},
+  {"garmin_dump", 1, {"dump", NULL}},
+  {"garmin_get_info", 1, {"info", NULL}},
+  {"garmin_gmap", 2, {"convert", "--format=gmap"}},
+  {"garmin_gchart", 2, {"convert", "--format=gchart"}},
+  {"garmin_gpx", 2, {"convert", "--format=gpx"}},
+  {"garmin_tcx", 2, {"convert", "--format=tcx"}},
+  {NULL, 0, {NULL, NULL}},
+};
 
 static garmin_command_dispatch_t commands[] = {
   {"help", garmin_help, N_("Show help for the various subcommands")},
@@ -131,23 +151,65 @@ garmin_help(int argc, char *argv[])
   return handle_command(argc, argv);
 }
 
+static char **
+build_argc_argv(int original_argc, char *original_argv[], int *argc)
+{
+  char **argv = NULL;
+
+  // See if we are running from a compatibility symlink
+  if (strstr(original_argv[0], "garmin_") != NULL) {
+    garmin_compat_t *p = compat;
+    for (; p->name != NULL; ++p) {
+      if (strstr(original_argv[0], p->name) != NULL) {
+        *argc = original_argc + p->argc - 1;
+        argv  = calloc(*argc, sizeof(char *));
+        for (int i = 0; i < p->argc; i++) {
+          argv[i] = (char *)p->argv[i];
+        }
+
+        if (original_argc > 0) {
+          memcpy(argv + p->argc,
+                 original_argv + 1,
+                 (original_argc - 1) * sizeof(char *));
+        }
+
+        break;
+      }
+    }
+  }
+
+  return argv;
+}
+
 int
 main(int original_argc, char *original_argv[])
 {
-  char **argv = (char **)original_argv;
-  int    argc = original_argc;
+  char **argv      = NULL;
+  int    argc      = 0;
+  bool   free_argv = true;
 
-  argv++;
-  argc--;
+  argv = build_argc_argv(original_argc, original_argv, &argc);
 
+  if (argv == NULL) {
+    free_argv = false;
+    argv      = (char **)original_argv;
+    argc      = original_argc;
+    argv++;
+    argc--;
+  }
+
+  int retval = 1;
   if (argc > 0) {
     if (strstr(argv[0], "--") == argv[0]) {
       argv[0] += 2;
     }
-    } else {
-        print_usage();
-        exit (1);
-    }
+    retval = handle_command(argc, argv);
+  } else {
+    print_usage();
+  }
 
-    return handle_command(argc, argv);
+  if (free_argv)
+    free(argv);
+
+  return retval;
 }
