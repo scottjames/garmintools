@@ -1,5 +1,5 @@
 language: C
-dist: xenial
+dist: bionic
 sudo: true
 
 before_install:
