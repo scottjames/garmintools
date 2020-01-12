@@ -1142,13 +1142,14 @@ garmin_unpack_chunk ( uint8 ** pos )
       /* unpacked the wrong number of bytes! */
       printf("garmin_unpack_chunk: unpacked %d bytes (expecting %d) (size %u). Exiting.\n",
              unpacked,chunk, size);
-      exit(1);
+      garmin_free_data(data);
+      return NULL;
     }
 
   } else {
     /* unknown file format */
     printf("garmin_unpack_chunk: not a .gmn file. Exiting.\n");
-    exit(1);
+    return NULL;
   }
 
   return data;
@@ -1181,7 +1182,15 @@ garmin_load ( const char * filename )
           pos    = buf;
           while ( pos - buf < bytes ) {
             start = pos;
-            garmin_list_append(list,garmin_unpack_chunk(&pos));
+            garmin_data *chunk = garmin_unpack_chunk(&pos);
+            if (chunk == NULL) {
+              printf("garmin_load:  %s: Failed to unpack\n", filename);
+              garmin_free_list(list);
+              garmin_free_data(data_l);
+
+              return NULL;
+            }
+            garmin_list_append(list, chunk);
             if ( pos == start ) {
               /* did not unpack anything! */
               printf("garmin_load:  %s: nothing unpacked!\n",filename);
