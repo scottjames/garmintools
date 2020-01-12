@@ -65,6 +65,7 @@ static PyObject* get_info(PyObject* obj, PyObject* args)
   PyDict_SetItem(dict, PyString_FromString("description"), PyString_FromString(product_description));
 
   garmin_close(&garmin);
+  garmin_shutdown(&garmin);
 
   return Py_BuildValue("N", dict);
 }
@@ -304,6 +305,7 @@ static PyObject* get_runs(PyObject* obj, PyObject* args)
 
   garmin_free_data(data);
   garmin_close(&garmin);
+  garmin_shutdown(&garmin);
 
   return Py_BuildValue("N", dict);  
 }
