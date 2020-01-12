@@ -76,6 +76,7 @@ static PyObject* get_info(PyObject* obj, PyObject* args)
 static PyObject* get_runs(PyObject* obj, PyObject* args)
 {
   garmin_unit garmin;
+  PyObject *  result = NULL;
 
   if (!initialize_garmin(&garmin))
     return NULL;
@@ -85,7 +86,7 @@ static PyObject* get_runs(PyObject* obj, PyObject* args)
   if ( (data = garmin_get(&garmin, GET_RUNS)) == NULL )
   {
     PyErr_SetString(PyExc_RuntimeError, "Unable to extract any data.");
-    return NULL;
+    goto out;
   }
 
   /*
@@ -104,42 +105,42 @@ static PyObject* get_runs(PyObject* obj, PyObject* args)
   if ( tmpdata == NULL )
   {
     PyErr_SetString(PyExc_RuntimeError, "Toplevel data missing element 0 (runs)");
-    return NULL;
+    goto out;
   }
 
   runs = tmpdata->data;
   if ( runs == NULL )
   {
     PyErr_SetString(PyExc_RuntimeError, "No runs extracted.");
-    return NULL;
+    goto out;
   }
     
   tmpdata = garmin_list_data(data, 1);
   if ( tmpdata == NULL )
   {
     PyErr_SetString(PyExc_RuntimeError, "Toplevel data missing element 1 (laps)");
-    return NULL;
+    goto out;
   }
 
   laps = tmpdata->data;
   if ( laps == NULL )
   {
     PyErr_SetString(PyExc_RuntimeError, "No laps extracted.");
-    return NULL;
+    goto out;
   }
   
   tmpdata = garmin_list_data(data, 2);
   if ( tmpdata == NULL )
   {
     PyErr_SetString(PyExc_RuntimeError, "Toplevel data missing element 2 (tracks)");
-    return NULL;
+    goto out;
   }
   
   tracks = tmpdata->data;
   if ( tracks == NULL )
   {
     PyErr_SetString(PyExc_RuntimeError, "No tracks extracted.");
-    return NULL;
+    goto out;
   }
 
   garmin_list_node * n;
@@ -164,8 +165,8 @@ static PyObject* get_runs(PyObject* obj, PyObject* args)
   }
     
   /* For each run, get its laps and track points. */
-  
-  PyObject* dict = PyDict_New();
+
+  PyObject *dict = PyDict_New();
 
   for ( n = runs->head; n != NULL; n = n->next )
   {      
@@ -303,11 +304,16 @@ static PyObject* get_runs(PyObject* obj, PyObject* args)
     }
   }
 
-  garmin_free_data(data);
+  result = Py_BuildValue("N", dict);
+
+out:
+  if (data != NULL)
+    garmin_free_data(data);
+
   garmin_close(&garmin);
   garmin_shutdown(&garmin);
 
-  return Py_BuildValue("N", dict);  
+  return result;
 }
 
 
