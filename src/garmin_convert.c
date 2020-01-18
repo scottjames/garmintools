@@ -128,13 +128,6 @@ garmin_convert(int argc, char *argv[], const char *output_file)
   int    new_argc = argc - offset;
   char **new_argv = argv + offset;
 
-  printf("=optind: %d\n", optind);
-  optind = 1;
-
-  for (int i = 0; i < new_argc; i++) {
-    printf("%d: %s\n", i, new_argv[i]);
-  }
-
   switch (format) {
   case GARMIN_OUTPUT_FORMAT_DUMP:
     return garmin_dump(new_argc, new_argv);
