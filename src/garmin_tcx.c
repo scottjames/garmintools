@@ -160,14 +160,19 @@ static void
 print_tcx_data(garmin_data *data, char *device_information, FILE *fn)
 {
   {
-      print_tcx_header(fn);
-      fprintf(fn, "  <Activities>\n");
+    if (data->type != data_Dlist) {
+      fprintf(stderr, "Unsupported data %d, need data_LIST\n", data->type);
+      return;
+    }
+
       garmin_data *d = garmin_list_data(data, 0);
       if (d->type != data_D1009) {
           fprintf(stderr, "Unsupported activity type %d\n", d->type);
           return;
       }
 
+      print_tcx_header(fn);
+      fprintf(fn, "  <Activities>\n");
       D1009 *d1009 = d->data;
       fprintf(fn, "    <Activity Sport=\"%s\">\n",
               d1009->sport_type == D1000_running ? "Running" : (d1009->sport_type == D1000_biking ? "Biking" : "Other"));
