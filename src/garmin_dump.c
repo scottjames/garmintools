@@ -80,12 +80,17 @@ garmin_dump ( int argc, const char ** argv )
     exit(EXIT_SUCCESS);
   }
 
+  printf("<?xml version=\"1.0\"?>\n");
+  printf("<garmin>\n");
   for ( i = 1; i < argc; i++ ) {
     if ( (data = garmin_load(argv[i])) != NULL ) {
+      printf("<activity>\n");
       garmin_print_data(data,stdout,0);
+      printf("</activity>\n");
       garmin_free_data(data);
     }
   }
+  printf("</garmin>\n");
 
   return EXIT_SUCCESS;
 }
