@@ -366,6 +366,7 @@ garmin_write ( garmin_unit * garmin, garmin_packet * p )
                                BULK_TIMEOUT);
     if ( r != s ) {
       printf("libusb_bulk_write failed: %s\n",libusb_error_name(err));
+      garmin_close(garmin);
       exit(1);
     }
   }
