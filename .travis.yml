@@ -1,5 +1,5 @@
 language: C
-dist: bionic
+dist: focal
 sudo: true
 
 before_install:
