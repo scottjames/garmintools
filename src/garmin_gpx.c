@@ -236,7 +236,7 @@ print_gpx_header ( FILE *               fp,
   print_spaces(fp,spaces);
   fprintf(fp,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
   fprintf(fp,"<gpx version=\"1.1\"\n"
-    "creator=\"Garmin Forerunner Tools - http://garmintools.googlecode.com\"\n"
+    "creator=\"Garmin Forerunner Tools - https://github.com/phako/garmintools\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
     "xmlns:gpxtpx=\"http://www.garmin.com/xmlschemas/TrackPointExtension/v1\"\n"
     "xmlns=\"http://www.topografix.com/GPX/1/1\"\n"
