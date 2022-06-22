@@ -107,6 +107,7 @@ get_gpx_data ( garmin_data *    fulldata,
 
         switch (point->type) {
           case data_D304: // position point
+          case data_D303:
 
             d304 = point->data;
 
