@@ -325,7 +325,11 @@ print_gpx_data ( garmin_data * data, FILE * fp, int spaces )
 
   if ( get_gpx_data(data,&laps,&sw,&ne) != 0 ) {
     print_gpx_header(fp,spaces);
-    print_time_tag(time(NULL),fp,spaces);
+
+    print_open_tag("metadata", fp, spaces);
+    print_time_tag(time(NULL),fp,spaces+2);
+    print_close_tag("metadata", fp, spaces);
+
     print_bounds_tag(&sw,&ne,fp,spaces);
 
     print_open_tag("trk",fp,spaces);
