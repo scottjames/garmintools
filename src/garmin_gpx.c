@@ -291,7 +291,7 @@ print_route_points ( route_point * points,
       fprintf(fp,"<name>Pause</name>\n");
     }
 
-    if ((rp->hr != 0) || (rp->cad != 0xff)) {
+    if ((rp->hr != 0) || ((rp->cad != 0xff) && (rp->cad != 0x00))) {
       print_spaces(fp, spaces+2);
       fprintf(fp,"<extensions>\n");
       print_spaces(fp, spaces+2);
