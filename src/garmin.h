@@ -1479,7 +1479,8 @@ typedef struct garmin_list {
 /* ------------------------------------------------------------------------- */
 
 #define GARMIN_USB_VID  0x091e
-#define GARMIN_USB_PID  0x0003
+//SAJ #define GARMIN_USB_PID  0x0003
+#define GARMIN_USB_PID  0x2b4b
 
 #define GARMIN_DIR_NONE  0
 #define GARMIN_DIR_READ  1
