@@ -1,7 +1,10 @@
 
-# Linux Install
+## Linux Install
 
-```
+Notes about building and installing software in Linux.
+
+
+```sh
 sudo apt install meson
 mkdir build
 cd build
@@ -11,16 +14,29 @@ meson install
 # install will prompt for sudo to install under /usr/local/
 ```
 
-# configure udev
+## configure udev
 
-plug in garmin device.  then get specific usb vendor and product id values.
+Find the USB ID.
 
-Plug in Garmin watch.
-`lsusb`
+ - Use `lsusb` to view currently connected USB devices.
+ - Plug in Garmin watch.
+ - Use `lsusb` to find the newly added USB Garmin device.
+ - Look for the ID of the Garmin device
 
-look for VID:PID tuple
+```
+lsusb
+...
+Bus 001 Device 026: ID 091e:2b4b Garmin International
+...
+```
 
-edit the extras udev rule file to add your device
+## Update udev
+
+Update the udev rules file, and install to recognize the Garmin device.
+
+ - Get the VID:PID tuple (like 091e:2b4b) above.
+ - Edit the udev rules file and add the new device: extras/10-garmin.rules
+ - Install the new udev rule and reload udev
 
 ```
 cd extras
@@ -30,9 +46,20 @@ sudo cp 10-garmin.rules /etc/udev/rules.d/
 sudo udevadm control --reload
 ```
 
-unplug the watch, wait a few seconds, then plug in again.
+## Read device
 
-the watch should register as USB flash drive with directories and files.
+Finally, refresh the device connection.
 
-NOTE: garmintools not able to access the device.
+ - Unplug the watch, wait a few seconds, then plug in again.
+ - The watch should register as USB flash drive with directories and files.
 
+
+## NOTES
+
+ - For me, `garmintools` program gives error when trying to open my device.
+ - However it is mounted as flash drive with directories and files.
+
+
+These are just my notes to build/install. Hopefully more will follow.
+
+-Scott 
